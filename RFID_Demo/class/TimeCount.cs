@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CS_RFID3_Host_Sample1
+namespace DCRFIDReader
 {
     public class TimeCount
     {
@@ -15,14 +15,17 @@ namespace CS_RFID3_Host_Sample1
             {
                 for (int i = 0; i < dsPO.Tables[0].Rows.Count; i++)
                 {
-                    dsPO.Tables[0].Rows[i]["start_time"] = DateTime.Now;
-                    dsPO.Tables[0].Rows[i]["stop_time"] = DateTime.Now;
+                    DateTime timest = DateTime.Now;
+                    dsPO.Tables[0].Rows[i]["start_time"] = timest;
+                    dsPO.Tables[0].Rows[i]["stop_time"] = timest;
+                    dsPO.Tables[0].Rows[i]["time_st"] = timest.ToString("HH:mm:ss");
+                    dsPO.Tables[0].Rows[i]["time_sp"] = timest.ToString("HH:mm:ss");
                     dsPO.Tables[0].Rows[i]["time_count"] = "00:00:00";
                 }              
             }
-            catch
+            catch(Exception ex)
             {
-
+                
             }
         }
 
@@ -30,41 +33,49 @@ namespace CS_RFID3_Host_Sample1
         {
             try
             {
+                DateTime time_sp = DateTime.Now;
+
                 for (int i = 0; i < dsPO.Tables[0].Rows.Count; i++)
                 {
                     DataRow dr = dsPO.Tables[0].Rows[i];
 
+                    
+
                     if ((int)dr["DigitalQuantity"] > (int)dr["QtyRead"])
                     {
-                        var t = (DateTime.Now - (DateTime)dr["start_time"]).TotalSeconds;
+                        var t = (time_sp - (DateTime)dr["start_time"]).TotalSeconds;
 
-                        decimal sec = (decimal)t;
+                        decimal totalsec = (decimal)t;
 
-                        decimal h = 0;
-                        decimal m = 0;
-                        decimal s = 0;
+                        decimal sec = (int)Math.Floor(totalsec);
+
+                        int h = 0;
+                        int m = 0;
+                        int s = 0;
                         string time_count = "";
 
-                        h = Math.Ceiling(sec / 3600);
+                        h = Convert.ToInt32(Math.Floor(sec / 3600));
                         sec = sec - (h * 3600);
 
-                        m = Math.Ceiling(sec / 60);
+                        m = Convert.ToInt32(Math.Floor(sec / 60));
                         sec = sec - (m * 60);
 
-                        s = sec;
+                        s = Convert.ToInt32(sec);
 
-                        time_count = string.Format("{0,10:D2}",h) + ":" +
-                                        string.Format("{0,10:D2}", m) + ":" +
-                                        string.Format("{0,10:D2}", s);
+                        time_count = string.Format("{0,10:D2}",h).Trim() + ":" +
+                                        string.Format("{0,10:D2}", m).Trim() + ":" +
+                                        string.Format("{0,10:D2}", s).Trim();
 
-                        dr["stop_time"] = DateTime.Now;
+
+                        dr["stop_time"] = time_sp;
+                        //dr["time_sp"] = time_sp.ToString("HH:mm:ss");
                         dr["time_count"] = time_count;
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
-
+                Console.Write(ex.Message);
             }
         }
 

@@ -1,4 +1,4 @@
-namespace CS_RFID3_Host_Sample1
+namespace DCRFIDReader
 {
     partial class HelpForm
     {
@@ -51,7 +51,7 @@ namespace CS_RFID3_Host_Sample1
             this.versionLabel.Name = "versionLabel";
             this.versionLabel.Size = new System.Drawing.Size(136, 13);
             this.versionLabel.TabIndex = 1;
-            this.versionLabel.Text = "CS_RFID3_Host_Sample1 ";
+            this.versionLabel.Text = "DCRFIDReader ";
             // 
             // copyRightLabel
             // 
@@ -85,7 +85,7 @@ namespace CS_RFID3_Host_Sample1
             this.MinimizeBox = false;
             this.Name = "HelpForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "About CS_RFID3_Host_Sample1";
+            this.Text = "About DCRFIDReader";
             this.Load += new System.EventHandler(this.HelpForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Reflection;
 
 
-namespace CS_RFID3_Host_Sample1
+namespace DCRFIDReader
 {
     public partial class HelpForm : Form
     {

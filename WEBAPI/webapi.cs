@@ -152,6 +152,123 @@ namespace webAPI
             }
         }
 
+        public static string DCReceive(string url, string token, string cid,
+            Array TAGS, ref string err)
+        {
+            try
+            {
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url + "/api/v1/goods/receive/accept");
+                httpWebRequest.Headers.Add("Authorization", token);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+
+                //if (httpWebRequest.CookieContainer == null)
+                //{
+                //    httpWebRequest.CookieContainer = new CookieContainer();
+                //}
+
+                //httpWebRequest.CookieContainer.Add(Cookies);
+
+                using (var streamWriter = new
+
+                StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    string json = new JavaScriptSerializer().Serialize(new
+                    {
+                        containerId = cid,
+                        itemUniqueIds = TAGS
+                    });
+                    streamWriter.Write("[" + json + "]");
+                }
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                err = ex.Message;
+                return "";
+            }
+        }
+
+
+        public static string POCommit1(string url, string token,Array po, ref string err)
+        {
+            try
+            {
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url + "/api/v1/goods/receive/commit");
+                httpWebRequest.Headers.Add("Authorization", token);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+
+
+                using (var streamWriter = new
+
+                StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    string json = new JavaScriptSerializer().Serialize(new
+                    {
+                        orderNumbers = po
+                    });
+                    streamWriter.Write(json);
+                }
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                err = ex.Message;
+                return "";
+            }
+        }
+
+
+        public static string POCommit(string url, string token, Array ordernumber, ref string err)
+        {
+            try
+            {
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url + "/api/v1/goods/receive/commit");
+                httpWebRequest.Headers.Add("Authorization", token);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+
+                //if (httpWebRequest.CookieContainer == null)
+                //{
+                //    httpWebRequest.CookieContainer = new CookieContainer();
+                //}
+
+                //httpWebRequest.CookieContainer.Add(Cookies);
+
+                using (var streamWriter = new
+
+                StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    string json = new JavaScriptSerializer().Serialize(new
+                    {
+                        orderNumbers = ordernumber
+                    });
+                    streamWriter.Write("[" + json + "]");
+                }
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                err = ex.Message;
+                return err;
+            }
+        }
 
 
         public static object ListPerson(string url, CookieCollection Cookies, string category, ref string message)

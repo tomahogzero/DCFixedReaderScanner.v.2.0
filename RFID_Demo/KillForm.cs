@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using Symbol.RFID3;
 
 
-namespace CS_RFID3_Host_Sample1
+namespace DCRFIDReader
 {
     public partial class KillForm : Form
     {

@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace CS_RFID3_Host_Sample1
+namespace DCRFIDReader
 {
     public partial class TagDataForm : Form
     {

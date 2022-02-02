@@ -9,8 +9,9 @@ using System.Threading;
 using System.Windows.Forms;
 using Symbol.RFID3;
 using System.Threading.Tasks;
+using DevExpress.XtraEditors.Repository;
 
-namespace CS_RFID3_Host_Sample1
+namespace DCRFIDReader
 {
     public partial class frmAppForm : Form
     {
@@ -29,16 +30,23 @@ namespace CS_RFID3_Host_Sample1
         private delegate void UpdateStatus(Events.StatusEventData eventData);
         private UpdateStatus m_UpdateStatusHandler = null;
         private delegate void UpdateRead(Events.ReadEventData eventData);
+        private delegate void dg_UpdateTimecount();
         private UpdateRead m_UpdateReadHandler = null;
         private TagData m_ReadTag = null;
         private Hashtable m_TagTable;
         private Button button1;
         private uint m_TagTotalCount;
 
+
+        public DataSet dsDevice;
         public DataSet dsTag;
         public DataSet dsBox;
         public DataSet dsProduct;
         public DataSet dsPO;
+        public DataSet dsPOEPC;
+        public DataTable dtGateDevice;
+        public string dcGateNumber = "";
+        public string currentBookingNo = "";
 
         public string dbserver = "";
         public string dbname = "";
@@ -46,6 +54,13 @@ namespace CS_RFID3_Host_Sample1
         public string pwd = "";
         public bool reading = false;
         public bool internal_cal = false;
+
+        public string deviceid = "";
+        public string deviceip = "";
+        public string deviceport = "";
+        public bool ReaderConnectInProcess = false;
+
+        public string Title = "RFID DC Receive Reader ";
 
         internal class AccessOperationResult
         {
@@ -74,11 +89,29 @@ namespace CS_RFID3_Host_Sample1
             m_IsConnected = false;
             m_TagTotalCount = 0;
 
-            dbValues.dbserver = "server.tesco.kaewsai.net";// System.Configuration.ConfigurationManager.AppSettings["db_servername"].Trim();
-            dbValues.dbname = "ApplicationDb";// System.Configuration.ConfigurationManager.AppSettings["db_databasename"].Trim();
-            dbValues.uid = "developer";//System.Configuration.ConfigurationManager.AppSettings["db_uid"].Trim();
-            dbValues.pwd = "f2Kfec9#c&wvx6gtweaJPrne";//System.Configuration.ConfigurationManager.AppSettings["db_pwd"].Trim();
 
+
+
+            //dbValues.dbr_dbserver = aconfig.dbr_servername(); // System.Configuration.ConfigurationManager.AppSettings["dbr_servername"].Trim();
+            //dbValues.dbr_dbname = aconfig.dbr_databasename(); // System.Configuration.ConfigurationManager.AppSettings["dbr_databasename"].Trim();
+            //dbValues.dbr_uid = aconfig.dbr_uid(); // System.Configuration.ConfigurationManager.AppSettings["dbr_uid"].Trim();
+            //dbValues.dbr_pwd = "f2Kfec9#c&wvx6gtweaJPrne"; // System.Configuration.ConfigurationManager.AppSettings["dbr_pwd"].Trim();
+
+            //dbValues.dbr_connectionstring = "Data Source=" + dbValues.dbr_dbserver + ";Initial Catalog=" + dbValues.dbr_dbname + ";User ID=" + dbValues.dbr_uid + ";Password=" + dbValues.dbr_pwd;
+
+
+            //dbValues.dbl_dbserver = aconfig.dbl_servername(); // System.Configuration.ConfigurationManager.AppSettings["dbl_servername"].Trim();
+            //dbValues.dbl_dbname = aconfig.dbl_databasename(); // System.Configuration.ConfigurationManager.AppSettings["dbl_databasename"].Trim();
+            //dbValues.dbl_uid = aconfig.dbl_uid(); // System.Configuration.ConfigurationManager.AppSettings["dbl_uid"].Trim();
+            //dbValues.dbl_pwd = aconfig.dbl_pwd(); // System.Configuration.ConfigurationManager.AppSettings["dbl_pwd"].Trim();
+
+            //dbValues.dbl_connectionstring = "Data Source=" + dbValues.dbl_dbserver + ";Initial Catalog=" + dbValues.dbl_dbname + ";User ID=" + dbValues.dbl_uid + ";Password=" + dbValues.dbl_pwd;
+
+
+            //dbValues.dbserver = "server.tesco.kaewsai.net";// System.Configuration.ConfigurationManager.AppSettings["db_servername"].Trim();
+            //dbValues.dbname = "ApplicationDb";// System.Configuration.ConfigurationManager.AppSettings["db_databasename"].Trim();
+            //dbValues.uid = "developer";//System.Configuration.ConfigurationManager.AppSettings["db_uid"].Trim();
+            //dbValues.pwd = "f2Kfec9#c&wvx6gtweaJPrne";//System.Configuration.ConfigurationManager.AppSettings["db_pwd"].Trim();
             //load_tags();
         }
 
@@ -199,7 +232,7 @@ namespace CS_RFID3_Host_Sample1
                         }
                         else
                         {
-                                                        
+
                             item = new ListViewItem(tag.TagID);
                             ListViewItem.ListViewSubItem subItem;
 
@@ -234,11 +267,21 @@ namespace CS_RFID3_Host_Sample1
                                 m_TagTable.Add(tagID, item);
                             }
 
-                            re_update_sku2(tag.TagID);
+                            string logText;
+
+                            logText = "TAG : " + tag.TagID + " Ant : " + tag.AntennaID.ToString();
+
+                            //if (aconfig.StartReaderForTest == "1")
+                            //{
+                            //FileIO.WriteLogToFile(logText);
+                            //}
+
+
+                           re_update_sku2(this, tag.TagID, tag.AntennaID);
                         }
                     }
                 }
-                totalTagValueLabel.Text = m_TagTable.Count + "(" + m_TagTotalCount + ")";
+                //totalTagValueLabel.Text = m_TagTable.Count + "(" + m_TagTotalCount + ")";
             }
         }
 
@@ -486,12 +529,13 @@ namespace CS_RFID3_Host_Sample1
 
         private void connectBackgroundWorker_DoWork(object sender, DoWorkEventArgs workEventArgs)
         {
+            ReaderConnectInProcess = true;
             connectBackgroundWorker.ReportProgress(0, workEventArgs.Argument);
 
             if ((string)workEventArgs.Argument == "Connect")
             {
-                m_ReaderAPI = new RFIDReader(m_ConnectionForm.IpText, uint.Parse(m_ConnectionForm.PortText), 0);
-
+                //m_ReaderAPI = new RFIDReader(m_ConnectionForm.IpText, uint.Parse(m_ConnectionForm.PortText), 0);
+                m_ReaderAPI = new RFIDReader(deviceip, uint.Parse(deviceport), 0);
                 try
                 {
                     m_ReaderAPI.Connect();
@@ -547,8 +591,8 @@ namespace CS_RFID3_Host_Sample1
                     m_ConnectionForm.hostname_TB.Enabled = false;
                     m_ConnectionForm.port_TB.Enabled = false;
                     m_ConnectionForm.Close();
-                    this.readButton.Enabled = true;
-                    this.readButton.Text = "Start Reading";
+                    this.btnStartRead.Enabled = true;
+                    this.btnStartRead.Text = "Start Reading";
 
                     /*
                      *  Events Registration
@@ -566,41 +610,73 @@ namespace CS_RFID3_Host_Sample1
                     m_ReaderAPI.Events.NotifyInventoryStartEvent = true;
                     m_ReaderAPI.Events.NotifyInventoryStopEvent = true;
 
-                    this.Text = "Connected to " + m_ConnectionForm.IpText;
+                    this.Text = Title + "Connected to " + deviceip;
                     this.connectionStatus.BackgroundImage =
-                        global::CS_RFID3_Host_Sample1.Properties.Resources.connected;
+                        global::DCRFIDReader.Properties.Resources.connected;
                 }
             }
             else if (m_ConnectionForm.connectionButton.Text == "Disconnect")
             {
                 if (connectEventArgs.Result.ToString() == "Disconnect Succeed")
                 {
-                    this.Text = "CS_RFID3_Host_Sample1";
+                    this.Text = Title + " IP : " + deviceip;
                     this.connectionStatus.BackgroundImage =
-                        global::CS_RFID3_Host_Sample1.Properties.Resources.disconnected;
+                        global::DCRFIDReader.Properties.Resources.disconnected;
 
                     m_ConnectionForm.connectionButton.Text = "Connect";
                     m_ConnectionForm.hostname_TB.Enabled = true;
                     m_ConnectionForm.port_TB.Enabled = true;
-                    this.readButton.Enabled = false;
-                    this.readButton.Text = "Start Reading";
+                    this.btnStartRead.Enabled = false;
+                    this.btnStartRead.Text = "Start Reading";
 
                 }
             }
             functionCallStatusLabel.Text = connectEventArgs.Result.ToString();
             m_ConnectionForm.connectionButton.Enabled = true;
+            ReaderConnectInProcess = false;
         }
 
-        private void AppForm_Load(object sender, EventArgs e)
+        private async void AppForm_Load(object sender, EventArgs e)
         {
-            load_company();
-            dsTag = QTags.get_epc("");
-            dsBox = QTags.get_box("", "");
-            dsProduct = QTags.get_product("", "");
-            dsPO = QTags.get_po("", "");
+            //txtGate.Text = aconfig.gate();
+            //load_company();
+            dtGateDevice = await DeviceGate.GetDataTable();
+            dcGateNumber = await DeviceGate.GetGateNumber(dtGateDevice, deviceid);
+            dsTag = await QTags.get_product_epc("");
+            dsBox = await QTags.get_box("");
+            dsProduct = await QTags.get_product("");
+            dsPO = await QTags.get_po("");
             load_tags();
-            //MessageBox.Show("load tag complete");
-            //connectBackgroundWorker.RunWorkerAsync("Connect");        
+
+            btnStartAuto.Enabled = true;
+            btnStopAuto.Enabled = false;
+
+            this.Text = Title + "IP : " + deviceip;
+
+            try
+            {
+                this.connectBackgroundWorker.RunWorkerAsync("Connect");
+            }
+            catch (Exception ex)
+            {
+                this.functionCallStatusLabel.Text = ex.Message;
+                MessageBox.Show(ex.Message);
+            }
+
+            if (aconfig.AutoStart() == "1")
+            {
+                btnStartAuto_Click(this, EventArgs.Empty);
+            }
+
+            int resetBuffer = aconfig.ResetBuffer_Min() * 60000;
+
+            timer_clear_buffer.Interval = resetBuffer;
+            //if (btnStartRead.Text == "Start Reading")
+            //{
+            //    btnStartRead_Click(this, EventArgs.Empty);
+            //}
+
+            notifyIcon1.Text = "Reader : " + deviceip;
         }
 
         private void load_tags()
@@ -721,76 +797,6 @@ namespace CS_RFID3_Host_Sample1
             helpDialog.Dispose();
         }
 
-        private void readButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (m_IsConnected)
-                {
-                    if (readButton.Text == "Start Reading")
-                    {
-                        //tabControl1.SelectedIndex = 0;
-                        m_ReaderAPI.Actions.Inventory.Perform(null, null, null);
-
-                        inventoryList.Items.Clear();
-                        m_TagTable.Clear();
-                        m_TagTotalCount = 0;
-
-                        dsTag.Tables[0].Rows.Clear();
-
-                        reading = true;
-
-                        readButton.Text = "Stop Reading";
-
-                        // timecount
-                        TimeCount.set_start(ref dsPO);
-                        timecount_start();
-                                                
-                        //update_ui();
-                    }
-                    else if (readButton.Text == "Stop Reading")
-                    {
-                        if (m_ReaderAPI.Actions.TagAccess.OperationSequence.Length > 0)
-                        {
-                            m_ReaderAPI.Actions.TagAccess.OperationSequence.StopSequence();
-                        }
-                        else
-                        {
-                            m_ReaderAPI.Actions.Inventory.Stop();
-                        }
-
-                        readButton.Text = "Start Reading";
-                        //tabControl1.SelectedIndex = 1;
-
-                        reading = false;
-                        //re_update_sku();
-
-                        // timecount
-                        timecount_stop();
-                    }
-                }
-                else
-                {
-                    functionCallStatusLabel.Text = "Please connect to a reader";
-                }
-            }
-            catch (InvalidOperationException ioe)
-            {
-                functionCallStatusLabel.Text = ioe.Message;
-            }
-            catch (InvalidUsageException iue)
-            {
-                functionCallStatusLabel.Text = iue.Info;
-            }
-            catch (OperationFailureException ofe)
-            {
-                functionCallStatusLabel.Text = ofe.Result + ":" + ofe.StatusDescription;
-            }
-            catch (Exception ex)
-            {
-                functionCallStatusLabel.Text = ex.Message;
-            }
-        }
 
         void inventoryList_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
         {
@@ -879,13 +885,13 @@ namespace CS_RFID3_Host_Sample1
 
         private void clearReports_CB_CheckedChanged(object sender, EventArgs e)
         {
-            this.totalTagValueLabel.Text = "0(0)";
-            this.lblTotalBox.Text   = "0";
-            this.lblTotalSKU.Text = "0";
+            //this.totalTagValueLabel.Text = "0(0)";
+            //this.lblTotalBox.Text = "0";
+            //this.lblTotalSKU.Text = "0";
             this.inventoryList.Items.Clear();
             this.m_TagTable.Clear();
 
-            dsTag.Tables[0].Clear();
+            //dsTag.Tables[0].Clear();
             dsBox.Tables[0].Clear();
             dsProduct.Tables[0].Clear();
 
@@ -909,89 +915,108 @@ namespace CS_RFID3_Host_Sample1
             //    this.Invoke(new Action(update_ui));
             //}
             //else {
-                
+
             //}
 
-            var t = Task.Run(() => {
-                while (reading == true)
-                {
-                    if (internal_cal == false)
-                    {
-                        re_update_sku();
-                    }
-                }
-            });
-            t.Wait();
+            //var t = Task.Run(() =>
+            //{
+            //    while (reading == true)
+            //    {
+            //        if (internal_cal == false)
+            //        {
+            //            re_update_sku();
+            //        }
+            //    }
+            //});
+            //t.Wait();
         }
 
-        private void re_update_sku()
+        //private void re_update_sku()
+        //{
+        //    if (this.InvokeRequired)
+        //    {
+        //        this.Invoke(new MethodInvoker(re_update_sku));
+        //    }
+        //    else
+        //    {
+        //        internal_cal = true;
+        //        for (int i = 0; i <= inventoryList.Items.Count - 1; i++)
+        //        {
+        //            if (inventoryList.Items[i].SubItems[8].Text != "")
+        //            {
+        //                string tag = inventoryList.Items[i].SubItems[0].Text;
+        //                DataSet ds = QTags.get_epc(tag);
+        //                if (ds.Tables[0].Rows.Count > 0)
+        //                {
+        //                    DataRow dr = ds.Tables[0].Rows[0];
+        //                    QTagsUpdate_EPC.add(ref dsTag, ref dsPOEPC, tag, dr["ProductSku"].ToString(), dr["Upc"].ToString(), dr["Description"].ToString(), dr["ContainerId"].ToString(), int.Parse(dr["Status"].ToString()), dr["location"].ToString(), dr["vendorid"].ToString());
+        //                    QTagsUpdate.add_box(ref this, ref dsBox, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString());
+        //                    QTagsUpdate.add_product(ref dsProduct, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString(), dr["ProductSku"].ToString());
+        //                    QTagsUpdate.add_sl(ref dsPO, dr["OrderNumber"].ToString());
+        //                }
+
+        //                // mark read
+        //                inventoryList.Items[i].SubItems[8].Text = "1";
+        //                for (int c = 0; c <= inventoryList.Columns.Count - 1; c++)
+        //                {
+        //                    inventoryList.Items[i].BackColor = Color.LightGreen;
+        //                }
+        //            }
+        //        }
+        //        lblTotalBox.Text = QTSumary.SumBox(ref dsBox);
+        //        lblTotalSKU.Text = QTSumary.SumSKU(ref dsPO);
+        //        internal_cal = false;
+
+        //        this.Refresh();
+        //    }
+        //}
+
+        private delegate void dg_re_update_sku2(System.Windows.Forms.Form m_form, string tags, int antenna);
+
+        private async void re_update_sku2(System.Windows.Forms.Form m_form, string tags, int antenna)
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(re_update_sku));
-            }
-            else {
-                internal_cal = true;
-                for (int i = 0; i <= inventoryList.Items.Count - 1; i++)
-                {
-                    if (inventoryList.Items[i].SubItems[8].Text != "")
-                    {
-                        string tag = inventoryList.Items[i].SubItems[0].Text;
-                        DataSet ds = QTags.get_epc(tag);
-                        if (ds.Tables[0].Rows.Count > 0)
-                        {
-                            DataRow dr = ds.Tables[0].Rows[0];
-                            QTagsUpdate_EPC.add(ref dsTag, tag, dr["ProductSku"].ToString(), dr["Upc"].ToString(), dr["Description"].ToString(), dr["ContainerId"].ToString(), int.Parse(dr["Status"].ToString()), dr["location"].ToString(), dr["vendorid"].ToString());
-                            QTagsUpdate.add_box(ref dsBox, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString());
-                            QTagsUpdate.add_product(ref dsProduct, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString(), dr["ProductSku"].ToString());
-                            QTagsUpdate.add_sl(ref dsPO, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString());
-                        }
-
-                        // mark read
-                        inventoryList.Items[i].SubItems[8].Text = "1";
-                        for (int c = 0; c <= inventoryList.Columns.Count - 1; c++)
-                        {
-                            inventoryList.Items[i].BackColor = Color.LightGreen;
-                        }
-                    }
-                }
-                lblTotalBox.Text = QTSumary.SumBox(ref dsBox);
-                lblTotalSKU.Text = QTSumary.SumSKU(ref dsPO);
-                internal_cal = false;
-
-                this.Refresh();
-            } 
-        }
-
-        private delegate void dg_re_update_sku2(string tags);
-
-        private void re_update_sku2(string tags)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new dg_re_update_sku2(re_update_sku2),tags);
+                this.Invoke(new dg_re_update_sku2(re_update_sku2), m_form, tags, antenna);
             }
             else
             {
                 internal_cal = true;
                 string tag = tags;// item.SubItems[0].Text;
-                DataSet ds = QTags.get_epc(tag);
-                if (ds.Tables[0].Rows.Count > 0)
+                //DataSet ds = await QTags.get_epc_is_exist(tag, deviceid, antenna);
+
+                DataRow dr = await QTags.GetEPCDetail(dcGateNumber, dsTag.Tables[0], deviceid, antenna, tag);
+
+                if (dr != null)
                 {
-                    DataRow dr = ds.Tables[0].Rows[0];
-                    QTagsUpdate_EPC.add(ref dsTag, tag, dr["ProductSku"].ToString(), dr["Upc"].ToString(), dr["Description"].ToString(), dr["ContainerId"].ToString(),int.Parse( dr["Status"].ToString()), dr["LocationName"].ToString(), dr["StoreNumber"].ToString());
-                    QTagsUpdate.add_box(ref dsBox, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString());
-                    QTagsUpdate.add_product(ref dsProduct, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString(), dr["ProductSku"].ToString());
-                    QTagsUpdate.add_sl(ref dsPO, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString());
+                    //DataRow dr = ds.Tables[0].Rows[0];
+                    string res = await save_epc_scan(dcGateNumber, currentBookingNo, tag, dr["PRProductItemId"].ToString());
+                    if (res != "")
+                    {
+                        MessageBox.Show(res);
+                    }
+                    await Task.Run(() =>
+                    {
+                        QTagsUpdate_EPC.updateRead(ref dsTag, tag);
+                        QTagsUpdate.add_box(ref m_form, ref dsBox, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString());
+                        QTagsUpdate.add_product(ref dsProduct, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString(), dr["ProductSku"].ToString());
+                        QTagsUpdate.add_po(ref dsPO, dr["OrderNumber"].ToString());
+                    });
                 }
                 //else {
                 //    QTagsUpdate_EPC.add(ref dsTag, tag,"","", "", "", 0,"", "");
                 //}
 
-                gcTag.Refresh();
-                gcBox.Refresh();
-                gcUPC.Refresh();
-                gcPO.Refresh();
+                await Task.Run(() =>
+                {
+                    gcTag.Refresh();
+                    gcBox.Refresh();
+                    gcUPC.Refresh();
+                    gcPO.Refresh();
+                });
+
+                lblTotalEPC.Text = inventoryList.Items.Count.ToString();
+
                 // mark read
                 //item.SubItems[8].Text = "1";
                 //for (int c = 0; c <= inventoryList.Columns.Count - 1; c++)
@@ -1003,63 +1028,27 @@ namespace CS_RFID3_Host_Sample1
                 //item.BackColor = Color.LightGreen;
 
 
-                lblNumberOfBox.Text = QTSumary.SumBox(ref dsBox);
-                lblTotalUPC.Text = QTSumary.SumSKU(ref dsProduct);
+                //lblNumberOfBox.Text = QTSumary.SumBox(ref dsBox);
+                //lblTotalUPC.Text = QTSumary.SumSKU(ref dsProduct);
 
-                lblNumberOfBox.Refresh();
-                lblTotalUPC.Refresh();
-                totalTagValueLabel.Refresh();
+                //lblNumberOfBox.Refresh();
+                //lblTotalUPC.Refresh();
+                //totalTagValueLabel.Refresh();
 
                 internal_cal = false;
             }
         }
 
-        private void btnLoadPO_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                dsTag = QTags.get_epc("");
-                dsBox = QTags.get_box(cboVendor.EditValue.ToString(), cboBookingNo.EditValue.ToString());
-                dsProduct = QTags.get_product(cboVendor.EditValue.ToString(), cboBookingNo.EditValue.ToString());
-                dsPO = QTags.get_po(cboVendor.EditValue.ToString(), cboBookingNo.EditValue.ToString());
-                load_tags();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Erro");
-            }
-
-        }
-
-        private void bntClear_Click(object sender, EventArgs e)
-        {
-            this.totalTagValueLabel.Text = "0(0)";
-            this.lblTotalBox.Text = "0";
-            this.lblTotalSKU.Text = "0";
-
-            lblNumberOfBox.Text = "0/0";
-            lblTotalUPC.Text = "0/0";
-
-            this.inventoryList.Items.Clear();
-            this.m_TagTable.Clear();
-
-            dsTag.Tables[0].Clear();
-            dsBox.Tables[0].Clear();
-            dsProduct.Tables[0].Clear();
-            dsPO.Tables[0].Clear();
-
-            clearReports_CB.Checked = false;
-        }
 
         private void clear_ui()
         {
-            this.totalTagValueLabel.Text = "0(0)";
-            this.lblTotalBox.Text = "0";
-            this.lblTotalSKU.Text = "0";
+            //this.totalTagValueLabel.Text = "0(0)";
+            //this.lblTotalBox.Text = "0";
+            //this.lblTotalSKU.Text = "0";
 
 
-            lblNumberOfBox.Text = "0/0";
-            lblTotalUPC.Text = "0/0";
+            //lblNumberOfBox.Text = "0/0";
+            //lblTotalUPC.Text = "0/0";
 
             this.inventoryList.Items.Clear();
             this.m_TagTable.Clear();
@@ -1072,87 +1061,91 @@ namespace CS_RFID3_Host_Sample1
             clearReports_CB.Checked = false;
         }
 
-        private void load_company()
+
+        private async void gvPO_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
         {
-            DataSet dst = QTags.get_company();
-            cboVendor.Properties.DataSource = dst.Tables[0];
-            cboVendor.Properties.ValueMember = "CompanyId";
-            cboVendor.Properties.DisplayMember = "CompanyName";
-                 
+            await Task.Run(() =>
+            {
+                int QtyRead = Convert.ToInt32(gvPO.GetRowCellValue(e.RowHandle, "QtyRead"));
+                int DigitalQuantity = Convert.ToInt32(gvPO.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
+
+
+                if (DigitalQuantity != QtyRead)
+                {
+                    e.Appearance.BackColor = Color.White;
+                }
+                else
+                {
+                    e.Appearance.BackColor = Color.LightGreen;
+                }
+                //Override any other formatting  
+                e.HighPriority = true;
+            });
         }
 
-        private void load_booking(string vendorid)
+        private async void gvBox_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
         {
-            DataSet dst = QTags.get_booking(vendorid);
-            cboBookingNo.Properties.DataSource = dst.Tables[0];
-            cboBookingNo.Properties.ValueMember = "BookingNumber";
-            cboBookingNo.Properties.DisplayMember = "BookingNumber";
+            await Task.Run(() =>
+            {
+                int QtyRead = Convert.ToInt32(gvBox.GetRowCellValue(e.RowHandle, "QtyRead"));
+                int DigitalQuantity = Convert.ToInt32(gvBox.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
+
+                if (e.RowHandle >= 0)
+                {
+                    dsBox.Tables[0].Rows[e.RowHandle]["OrderNumber"].ToString();
+                }
+
+
+                string cid = "";
+
+                if (gvBox.GetRowCellValue(e.RowHandle, "ContainerId") != null)
+                {
+                    cid = gvBox.GetRowCellValue(e.RowHandle, "ContainerId").ToString();
+                }
+
+                if (DigitalQuantity != QtyRead)
+                {
+                    e.Appearance.BackColor = Color.White;
+                }
+                else
+                {
+                    //if ((DigitalQuantity == QtyRead) && (QtyRead > 0) && (cid != ""))
+                    //{
+                    //    // save cid
+                    //    save_cid(cid, get_tags(cid));
+
+                    //    QTags.accept_box(OrderNumber, cid);
+                    //    Application.DoEvents();
+                    //}
+                    e.Appearance.BackColor = Color.LightGreen;
+                }
+
+                //Override any other formatting  
+                e.HighPriority = true;
+            });
         }
 
-        private void gvPO_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
+        private async void gvUPC_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
         {
-            int QtyRead = Convert.ToInt32(gvPO.GetRowCellValue(e.RowHandle, "QtyRead"));
-            int DigitalQuantity = Convert.ToInt32(gvPO.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
-
-            if (DigitalQuantity != QtyRead)
+            await Task.Run(() =>
             {
-                e.Appearance.BackColor = Color.LightYellow;
-            }
-            else
-            {
-                e.Appearance.BackColor = Color.LightGreen;
-            }
+                int QtyRead = Convert.ToInt32(gvUPC.GetRowCellValue(e.RowHandle, "QtyRead"));
+                int DigitalQuantity = Convert.ToInt32(gvUPC.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
 
-            //Override any other formatting  
-            e.HighPriority = true;
+                if (DigitalQuantity != QtyRead)
+                {
+                    e.Appearance.BackColor = Color.White;
+                }
+                else
+                {
+                    e.Appearance.BackColor = Color.LightGreen;
+                }
+
+                //Override any other formatting  
+                e.HighPriority = true;
+            });
         }
 
-        private void gvBox_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
-        {
-            int QtyRead = Convert.ToInt32(gvBox.GetRowCellValue(e.RowHandle, "QtyRead"));
-            int DigitalQuantity = Convert.ToInt32(gvBox.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
-
-            if (DigitalQuantity != QtyRead)
-            {
-                e.Appearance.BackColor = Color.LightYellow;
-            }
-            else
-            {
-                e.Appearance.BackColor = Color.LightGreen;
-            }
-
-            //Override any other formatting  
-            e.HighPriority = true;
-        }
-
-        private void gvUPC_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
-        {
-            int QtyRead = Convert.ToInt32(gvUPC.GetRowCellValue(e.RowHandle, "QtyRead"));
-            int DigitalQuantity = Convert.ToInt32(gvUPC.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
-
-            if (DigitalQuantity != QtyRead)
-            {
-                e.Appearance.BackColor = Color.LightYellow;
-            }
-            else
-            {
-                e.Appearance.BackColor = Color.LightGreen;
-            }
-
-            //Override any other formatting  
-            e.HighPriority = true;
-        }
-
-        private void cboVendor_EditValueChanged(object sender, EventArgs e)
-        {
-            if (cboVendor.EditValue == null)
-            {
-                load_booking("");
-            }
-            else {
-                load_booking(cboVendor.EditValue.ToString());
-            } 
-        }
 
         private void update_time_count()
         {
@@ -1181,7 +1174,8 @@ namespace CS_RFID3_Host_Sample1
         {
             BackgroundWorker worker = sender as BackgroundWorker;
 
-            while (worker.CancellationPending == false) {
+            while (worker.CancellationPending == false)
+            {
                 TimeCount.update_time_count(ref dsPO);
                 System.Threading.Thread.Sleep(1000);
             }
@@ -1192,6 +1186,321 @@ namespace CS_RFID3_Host_Sample1
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             gcPO.Refresh();
+        }
+
+        public Array get_tags(string cid)
+        {
+            List<string> add_list = new List<string>();
+
+            //string err = "";
+            //DataSet ds = SyncData.GetDt_PRProductItem_Local(cboVendor.EditValue.ToString(), cboBookingNo.EditValue.ToString(), cid, ref err);
+            //if (err != "") { update_sync_log("Save EPC: " + err); }
+
+            //foreach (DataRow dr in ds.Tables[0].Rows)
+            //{
+            //    add_list.Add(dr["ItemUniqueId"].ToString());
+            //}
+            return add_list.ToArray();
+        }
+
+        private void configToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void gcBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            dsPO.Tables[0].Rows[1]["accept"] = 1;
+            //string ret = "";
+            //ret = po_commit(txtres_person.Text);
+            //MessageBox.Show(ret);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            foreach (DataRow dr in dsPOEPC.Tables[0].Rows)
+            {
+                re_update_sku2(this, dr["EPC"].ToString(), 0);
+                System.Threading.Thread.Sleep(500);
+            }
+        }
+
+        private async void timer1_timecount_Tick(object sender, EventArgs e)
+        {
+            await Task.Run(() =>
+            {
+                update_timecount();
+            });
+        }
+
+        private void update_timecount()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(() => { update_timecount(); }));
+            }
+            else
+            {
+                TimeCount.update_time_count(ref dsPO);
+            }
+        }
+
+        private void gvPO_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e)
+        {
+            //if (e.Column.Name == "accept") {
+            //    gvPO_CustomRowCellEdit(sender,DevExpress.XtraGrid.Views.Grid.CustomRowCellEditEventArgs.Empty());
+            //}
+        }
+
+        private void mnuGate_Click(object sender, EventArgs e)
+        {
+            frmGate fGate = new frmGate();
+            fGate.StartPosition = FormStartPosition.CenterScreen;
+            fGate.ShowDialog();
+        }
+
+        private void mnuDevice_Click(object sender, EventArgs e)
+        {
+            frmDevice fDevice = new frmDevice();
+            fDevice.StartPosition = FormStartPosition.CenterScreen;
+            fDevice.ShowDialog();
+        }
+
+        private void mnuSettingDeviceToGate_Click(object sender, EventArgs e)
+        {
+            frmGateDeviceSetting fGateDeviceSetting = new frmGateDeviceSetting();
+            fGateDeviceSetting.StartPosition = FormStartPosition.CenterScreen;
+            fGateDeviceSetting.ShowDialog();
+        }
+
+        private void btnStartRead_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (m_IsConnected)
+                {
+                    if (btnStartRead.Text == "Start Reading")
+                    {
+                        //tabControl1.SelectedIndex = 0;
+                        m_ReaderAPI.Actions.Inventory.Perform(null, null, null);
+
+                        inventoryList.Items.Clear();
+                        m_TagTable.Clear();
+                        m_TagTotalCount = 0;
+
+                        //dsTag.Tables[0].Rows.Clear();
+
+                        reading = true;
+
+                        btnStartRead.Text = "Stop Reading";
+
+                        //timer_clear_buffer.Enabled = true;
+
+                        // timecount
+                        //TimeCount.set_start(ref dsPO);
+                        //timecount_start();
+
+                        //timer1_timecount.Enabled = true;
+
+                        //update_ui();
+                    }
+                    else if (btnStartRead.Text == "Stop Reading")
+                    {
+                        if (m_ReaderAPI.Actions.TagAccess.OperationSequence.Length > 0)
+                        {
+                            m_ReaderAPI.Actions.TagAccess.OperationSequence.StopSequence();
+                        }
+                        else
+                        {
+                            m_ReaderAPI.Actions.Inventory.Stop();
+                        }
+
+                        btnStartRead.Text = "Start Reading";
+                        //tabControl1.SelectedIndex = 1;
+
+                        //timer_clear_buffer.Enabled = false;
+
+                        reading = false;
+                        //re_update_sku();
+
+                        // timecount
+                        //timer1_timecount.Enabled = false;
+                        //timecount_stop();
+                    }
+                }
+                else
+                {
+                    functionCallStatusLabel.Text = "Please connect to a reader";
+                }
+            }
+            catch (InvalidOperationException ioe)
+            {
+                functionCallStatusLabel.Text = ioe.Message;
+            }
+            catch (InvalidUsageException iue)
+            {
+                functionCallStatusLabel.Text = iue.Info;
+            }
+            catch (OperationFailureException ofe)
+            {
+                functionCallStatusLabel.Text = ofe.Result + ":" + ofe.StatusDescription;
+            }
+            catch (Exception ex)
+            {
+                functionCallStatusLabel.Text = ex.Message;
+            }
+        }
+
+        private async void btnClear_Click(object sender, EventArgs e)
+        {
+            await load_data_po();
+            //dsTag = QTags.get_epc("", "");
+            //dsBox = QTags.get_box("");
+            //dsProduct = QTags.get_product("");
+            //dsPO = QTags.get_po("");
+            //load_tags();
+
+            //this.totalTagValueLabel.Text = "0(0)";
+            //this.lblTotalBox.Text = "0";
+            //this.lblTotalSKU.Text = "0";
+
+            //lblNumberOfBox.Text = "0/0";
+            //lblTotalUPC.Text = "0/0";
+
+            //dsTag.Tables[0].Clear();
+            //dsBox.Tables[0].Clear();
+            //dsProduct.Tables[0].Clear();
+            //dsPO.Tables[0].Clear();
+
+            await Task.Run(() =>
+            {
+                inventoryList.Items.Clear();
+                m_TagTable.Clear();
+                lblTotalEPC.Text = "0";
+            });
+
+            //clearReports_CB.Checked = false;
+        }
+
+        private async void timer_getCommand_Tick(object sender, EventArgs e)
+        {
+            await scan_command();
+        }
+
+        private void btnStartAuto_Click(object sender, EventArgs e)
+        {
+            btnStartAuto.Enabled = false;
+            btnStopAuto.Enabled = true;
+
+            timer_getCommand.Enabled = true;
+        }
+
+        private void btnStopAuto_Click(object sender, EventArgs e)
+        {
+            btnStartAuto.Enabled = true;
+            btnStopAuto.Enabled = false;
+
+            timer_getCommand.Enabled = false;
+        }
+
+        private async void btnScanCommandManual_Click(object sender, EventArgs e)
+        {
+            await scan_command();
+        }
+
+        private void gvTag_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
+        {
+            int QtyRead = Convert.ToInt32(gvTag.GetRowCellValue(e.RowHandle, "QtyRead"));
+
+            if (QtyRead == 0)
+            {
+                e.Appearance.BackColor = Color.White;
+            }
+            else
+            {
+                e.Appearance.BackColor = Color.LightGreen;
+            }
+
+            //Override any other formatting  
+            e.HighPriority = true;
+        }
+
+        private async void btnResetRequest_Click(object sender, EventArgs e)
+        {
+            await command_clear_request();
+        }
+
+        private void timer_reconnect_Tick(object sender, EventArgs e)
+        {
+            if (ReaderConnectInProcess == false)
+            {
+                if (m_IsConnected == false)
+                {
+                    try
+                    {
+                        this.connectBackgroundWorker.RunWorkerAsync("Connect");
+                    }
+                    catch (Exception ex)
+                    {
+                        this.functionCallStatusLabel.Text = ex.Message;
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            }
+        }
+
+        private void frmAppForm_Move(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.Hide();
+                //this.notifyIcon1.ShowBalloonTip(100, "Notify Message", "Please click for see more detail..", ToolTipIcon.Info);
+            }
+        }
+
+        private void mnuShow_Click(object sender, EventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+        }
+
+        private void mnuExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+        }
+
+        private async void timer_clear_buffer_Tick(object sender, EventArgs e)
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    if (btnStartRead.Text == "Stop Reading")
+                    {
+                        btnStartRead_Click(btnStartRead, null);
+                        Thread.Sleep(1000);
+                        btnStartRead_Click(btnStartRead, null);
+                    }
+
+                    inventoryList.Items.Clear();
+                    m_TagTable.Clear();
+                }
+                catch
+                {
+
+                }
+            });
         }
     }
 }

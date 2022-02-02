@@ -1,4 +1,4 @@
-﻿namespace CS_RFID3_Host_Sample1
+﻿namespace DCRFIDReader
 {
     partial class frmAppForm
     {
@@ -29,8 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions1 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAppForm));
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.configToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuGate = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDevice = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuSettingDeviceToGate = new System.Windows.Forms.ToolStripMenuItem();
             this.connectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.capabilitiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -48,7 +53,6 @@
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.gpiLabel = new System.Windows.Forms.Label();
-            this.readButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -78,41 +82,42 @@
             this.blockEraseDataContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.accessBackgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.totalTagValueLabel = new System.Windows.Forms.Label();
-            this.totalTagLabel = new System.Windows.Forms.Label();
             this.clearReports_CB = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.lblTotalBox = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lblTotalUPC = new System.Windows.Forms.Label();
-            this.lblTotalSKU = new System.Windows.Forms.Label();
-            this.lblNumberOfBox = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.gcPO = new DevExpress.XtraGrid.GridControl();
             this.gvPO = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.gridColumn24 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn25 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gridColumn31 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colPOGateNumber = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colPOBookingNo = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn36 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn24 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn32 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn26 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn28 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gcoltime_count = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemPictureEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit();
+            this.repBtnPOCommit = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.gcBox = new DevExpress.XtraGrid.GridControl();
             this.gvBox = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.gridColumn27 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn31 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn29 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn20 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn5 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn4 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colIDDB = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn11 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn2 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn30 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repPic = new DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.gcUPC = new DevExpress.XtraGrid.GridControl();
             this.gvUPC = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.gridColumn13 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn34 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn33 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn19 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn17 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn3 = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -123,7 +128,6 @@
             this.gridColumn10 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn22 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemPictureEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.gcTag = new DevExpress.XtraGrid.GridControl();
             this.gvTag = new DevExpress.XtraGrid.Views.Grid.GridView();
@@ -132,30 +136,44 @@
             this.gridColumn12 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn14 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn15 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gridColumn13 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn16 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn23 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn6 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn35 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn37 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemPictureEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.bntClear = new System.Windows.Forms.Button();
-            this.btnLoadPO = new System.Windows.Forms.Button();
-            this.cboVendor = new DevExpress.XtraEditors.LookUpEdit();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.cboBookingNo = new DevExpress.XtraEditors.LookUpEdit();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.lstSyncLog = new System.Windows.Forms.ListBox();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.lblTotalEPC = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.defaultLookAndFeel1 = new DevExpress.LookAndFeel.DefaultLookAndFeel(this.components);
+            this.timer1_timecount = new System.Windows.Forms.Timer(this.components);
+            this.btnStartAuto = new DevExpress.XtraEditors.SimpleButton();
+            this.btnStopAuto = new DevExpress.XtraEditors.SimpleButton();
+            this.btnStartRead = new DevExpress.XtraEditors.SimpleButton();
+            this.btnClear = new DevExpress.XtraEditors.SimpleButton();
+            this.timer_getCommand = new System.Windows.Forms.Timer(this.components);
+            this.btnScanCommandManual = new System.Windows.Forms.Button();
+            this.btnResetRequest = new DevExpress.XtraEditors.SimpleButton();
+            this.timer_reconnect = new System.Windows.Forms.Timer(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnuShow = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.timer_clear_buffer = new System.Windows.Forms.Timer(this.components);
             this.mainMenuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.gpiStateGB.SuspendLayout();
             this.transmitPowerGB.SuspendLayout();
             this.dataContextMenuStrip.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcPO)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvPO)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repBtnPOCommit)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvBox)).BeginInit();
@@ -164,13 +182,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.gcUPC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvUPC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit1)).BeginInit();
-            this.tabPage1.SuspendLayout();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcTag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvTag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboVendor.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboBookingNo.Properties)).BeginInit();
+            this.tabPage6.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainMenuStrip
@@ -182,41 +200,69 @@
             this.mainMenuStrip.Name = "mainMenuStrip";
             this.mainMenuStrip.Size = new System.Drawing.Size(1101, 24);
             this.mainMenuStrip.TabIndex = 0;
+            this.mainMenuStrip.Visible = false;
             // 
             // configToolStripMenuItem
             // 
             this.configToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuGate,
+            this.mnuDevice,
+            this.mnuSettingDeviceToGate,
             this.connectionToolStripMenuItem,
             this.capabilitiesToolStripMenuItem,
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
             this.configToolStripMenuItem.Name = "configToolStripMenuItem";
-            this.configToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
-            this.configToolStripMenuItem.Text = "Config";
+            this.configToolStripMenuItem.Size = new System.Drawing.Size(93, 20);
+            this.configToolStripMenuItem.Text = "Configuration";
+            this.configToolStripMenuItem.Click += new System.EventHandler(this.configToolStripMenuItem_Click);
+            // 
+            // mnuGate
+            // 
+            this.mnuGate.Name = "mnuGate";
+            this.mnuGate.Size = new System.Drawing.Size(194, 22);
+            this.mnuGate.Text = "Gate";
+            this.mnuGate.Click += new System.EventHandler(this.mnuGate_Click);
+            // 
+            // mnuDevice
+            // 
+            this.mnuDevice.Name = "mnuDevice";
+            this.mnuDevice.Size = new System.Drawing.Size(194, 22);
+            this.mnuDevice.Text = "Reader Device";
+            this.mnuDevice.Click += new System.EventHandler(this.mnuDevice_Click);
+            // 
+            // mnuSettingDeviceToGate
+            // 
+            this.mnuSettingDeviceToGate.Name = "mnuSettingDeviceToGate";
+            this.mnuSettingDeviceToGate.Size = new System.Drawing.Size(194, 22);
+            this.mnuSettingDeviceToGate.Text = "Setting Reader  to Gate";
+            this.mnuSettingDeviceToGate.Click += new System.EventHandler(this.mnuSettingDeviceToGate_Click);
             // 
             // connectionToolStripMenuItem
             // 
             this.connectionToolStripMenuItem.Name = "connectionToolStripMenuItem";
-            this.connectionToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.connectionToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.connectionToolStripMenuItem.Text = "Connection...";
+            this.connectionToolStripMenuItem.Visible = false;
             this.connectionToolStripMenuItem.Click += new System.EventHandler(this.connectionToolStripMenuItem_Click);
             // 
             // capabilitiesToolStripMenuItem
             // 
             this.capabilitiesToolStripMenuItem.Name = "capabilitiesToolStripMenuItem";
-            this.capabilitiesToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.capabilitiesToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.capabilitiesToolStripMenuItem.Text = "Capabilities...";
+            this.capabilitiesToolStripMenuItem.Visible = false;
             this.capabilitiesToolStripMenuItem.Click += new System.EventHandler(this.capabilitiesToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(142, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(191, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -227,6 +273,7 @@
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Visible = false;
             // 
             // aboutToolStripMenuItem
             // 
@@ -257,7 +304,7 @@
             this.inventoryList.Location = new System.Drawing.Point(3, 3);
             this.inventoryList.MultiSelect = false;
             this.inventoryList.Name = "inventoryList";
-            this.inventoryList.Size = new System.Drawing.Size(1071, 302);
+            this.inventoryList.Size = new System.Drawing.Size(1071, 407);
             this.inventoryList.TabIndex = 1;
             this.inventoryList.UseCompatibleStateImageBehavior = false;
             this.inventoryList.View = System.Windows.Forms.View.Details;
@@ -265,7 +312,7 @@
             // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "EPC ID";
+            this.columnHeader1.Text = "EPC ID.";
             this.columnHeader1.Width = 202;
             // 
             // columnHeader8
@@ -322,19 +369,6 @@
             this.gpiLabel.Size = new System.Drawing.Size(68, 13);
             this.gpiLabel.TabIndex = 5;
             this.gpiLabel.Text = "Red For Low";
-            // 
-            // readButton
-            // 
-            this.readButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.readButton.Enabled = false;
-            this.readButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.readButton.Location = new System.Drawing.Point(201, 96);
-            this.readButton.Name = "readButton";
-            this.readButton.Size = new System.Drawing.Size(190, 54);
-            this.readButton.TabIndex = 2;
-            this.readButton.Text = "Start Reading";
-            this.readButton.UseVisualStyleBackColor = false;
-            this.readButton.Click += new System.EventHandler(this.readButton_Click);
             // 
             // label2
             // 
@@ -458,7 +492,7 @@
             // connectionStatus
             // 
             this.connectionStatus.AutoSize = false;
-            this.connectionStatus.BackgroundImage = global::CS_RFID3_Host_Sample1.Properties.Resources.disconnected;
+            this.connectionStatus.BackgroundImage = global::DCRFIDReader.Properties.Resources.disconnected;
             this.connectionStatus.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.connectionStatus.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
@@ -622,27 +656,6 @@
             this.accessBackgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.accessBackgroundWorker_ProgressChanged);
             this.accessBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.accessBackgroundWorker_RunWorkerCompleted);
             // 
-            // totalTagValueLabel
-            // 
-            this.totalTagValueLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.totalTagValueLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.totalTagValueLabel.Location = new System.Drawing.Point(192, 16);
-            this.totalTagValueLabel.Name = "totalTagValueLabel";
-            this.totalTagValueLabel.Size = new System.Drawing.Size(197, 28);
-            this.totalTagValueLabel.TabIndex = 26;
-            this.totalTagValueLabel.Text = "0(0)";
-            this.totalTagValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // totalTagLabel
-            // 
-            this.totalTagLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.totalTagLabel.Location = new System.Drawing.Point(52, 16);
-            this.totalTagLabel.Name = "totalTagLabel";
-            this.totalTagLabel.Size = new System.Drawing.Size(134, 28);
-            this.totalTagLabel.TabIndex = 25;
-            this.totalTagLabel.Text = "TOTAL TAGS : ";
-            this.totalTagLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // clearReports_CB
             // 
             this.clearReports_CB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -656,115 +669,6 @@
             this.clearReports_CB.Visible = false;
             this.clearReports_CB.CheckedChanged += new System.EventHandler(this.clearReports_CB_CheckedChanged);
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.label16);
-            this.groupBox1.Controls.Add(this.label13);
-            this.groupBox1.Controls.Add(this.lblTotalBox);
-            this.groupBox1.Controls.Add(this.label17);
-            this.groupBox1.Controls.Add(this.totalTagLabel);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.lblTotalUPC);
-            this.groupBox1.Controls.Add(this.lblTotalSKU);
-            this.groupBox1.Controls.Add(this.totalTagValueLabel);
-            this.groupBox1.Controls.Add(this.lblNumberOfBox);
-            this.groupBox1.Location = new System.Drawing.Point(598, 4);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(395, 126);
-            this.groupBox1.TabIndex = 28;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "SUMMARY";
-            // 
-            // label16
-            // 
-            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.label16.Location = new System.Drawing.Point(424, 55);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(98, 28);
-            this.label16.TabIndex = 25;
-            this.label16.Text = "Total Box : ";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.label16.Visible = false;
-            // 
-            // label13
-            // 
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.label13.Location = new System.Drawing.Point(731, 55);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(98, 28);
-            this.label13.TabIndex = 25;
-            this.label13.Text = "Total SKU : ";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.label13.Visible = false;
-            // 
-            // lblTotalBox
-            // 
-            this.lblTotalBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.lblTotalBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblTotalBox.Location = new System.Drawing.Point(528, 55);
-            this.lblTotalBox.Name = "lblTotalBox";
-            this.lblTotalBox.Size = new System.Drawing.Size(197, 28);
-            this.lblTotalBox.TabIndex = 26;
-            this.lblTotalBox.Text = "0";
-            this.lblTotalBox.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblTotalBox.Visible = false;
-            // 
-            // label17
-            // 
-            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.label17.Location = new System.Drawing.Point(11, 92);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(175, 28);
-            this.label17.TabIndex = 25;
-            this.label17.Text = "Total Quantity : ";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label1
-            // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.label1.Location = new System.Drawing.Point(41, 55);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(145, 28);
-            this.label1.TabIndex = 25;
-            this.label1.Text = "Number Of Box : ";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblTotalUPC
-            // 
-            this.lblTotalUPC.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.lblTotalUPC.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblTotalUPC.Location = new System.Drawing.Point(192, 92);
-            this.lblTotalUPC.Name = "lblTotalUPC";
-            this.lblTotalUPC.Size = new System.Drawing.Size(197, 28);
-            this.lblTotalUPC.TabIndex = 26;
-            this.lblTotalUPC.Text = "0/0";
-            this.lblTotalUPC.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblTotalSKU
-            // 
-            this.lblTotalSKU.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.lblTotalSKU.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblTotalSKU.Location = new System.Drawing.Point(835, 55);
-            this.lblTotalSKU.Name = "lblTotalSKU";
-            this.lblTotalSKU.Size = new System.Drawing.Size(173, 28);
-            this.lblTotalSKU.TabIndex = 26;
-            this.lblTotalSKU.Text = "0";
-            this.lblTotalSKU.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblTotalSKU.Visible = false;
-            // 
-            // lblNumberOfBox
-            // 
-            this.lblNumberOfBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.lblNumberOfBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblNumberOfBox.Location = new System.Drawing.Point(192, 55);
-            this.lblNumberOfBox.Name = "lblNumberOfBox";
-            this.lblNumberOfBox.Size = new System.Drawing.Size(197, 28);
-            this.lblNumberOfBox.TabIndex = 26;
-            this.lblNumberOfBox.Text = "0/0";
-            this.lblNumberOfBox.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // tabControl1
             // 
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -773,13 +677,14 @@
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage6);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControl1.Location = new System.Drawing.Point(1, 156);
+            this.tabControl1.Location = new System.Drawing.Point(1, 35);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1088, 344);
+            this.tabControl1.Size = new System.Drawing.Size(1088, 465);
             this.tabControl1.TabIndex = 29;
             // 
             // tabPage5
@@ -788,9 +693,9 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(1080, 318);
+            this.tabPage5.Size = new System.Drawing.Size(1080, 439);
             this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "SUMARY P/O";
+            this.tabPage5.Text = "SUMMARY P/O";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // gcPO
@@ -802,8 +707,9 @@
             this.gcPO.MainView = this.gvPO;
             this.gcPO.Name = "gcPO";
             this.gcPO.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repositoryItemPictureEdit3});
-            this.gcPO.Size = new System.Drawing.Size(1074, 309);
+            this.repositoryItemPictureEdit3,
+            this.repBtnPOCommit});
+            this.gcPO.Size = new System.Drawing.Size(1074, 433);
             this.gcPO.TabIndex = 3;
             this.gcPO.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvPO});
@@ -821,11 +727,15 @@
             this.gvPO.Appearance.ViewCaption.Font = new System.Drawing.Font("Tahoma", 12F);
             this.gvPO.Appearance.ViewCaption.Options.UseFont = true;
             this.gvPO.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
-            this.gridColumn24,
             this.gridColumn25,
-            this.gridColumn31,
+            this.colPOGateNumber,
+            this.colPOBookingNo,
+            this.gridColumn36,
+            this.gridColumn24,
             this.gridColumn32,
-            this.gridColumn26});
+            this.gridColumn26,
+            this.gridColumn28,
+            this.gcoltime_count});
             this.gvPO.GridControl = this.gcPO;
             this.gvPO.Name = "gvPO";
             this.gvPO.OptionsView.ColumnAutoWidth = false;
@@ -834,38 +744,58 @@
             this.gvPO.OptionsView.ShowFooter = true;
             this.gvPO.OptionsView.ShowGroupPanel = false;
             this.gvPO.RowStyle += new DevExpress.XtraGrid.Views.Grid.RowStyleEventHandler(this.gvPO_RowStyle);
-            // 
-            // gridColumn24
-            // 
-            this.gridColumn24.Caption = "P/O NO.";
-            this.gridColumn24.FieldName = "OrderNumber";
-            this.gridColumn24.Name = "gridColumn24";
-            this.gridColumn24.OptionsColumn.AllowEdit = false;
-            this.gridColumn24.Visible = true;
-            this.gridColumn24.VisibleIndex = 0;
-            this.gridColumn24.Width = 116;
+            this.gvPO.CellValueChanged += new DevExpress.XtraGrid.Views.Base.CellValueChangedEventHandler(this.gvPO_CellValueChanged);
             // 
             // gridColumn25
             // 
-            this.gridColumn25.Caption = "STORE";
-            this.gridColumn25.FieldName = "StoreNumber";
+            this.gridColumn25.Caption = "No.";
+            this.gridColumn25.FieldName = "row";
             this.gridColumn25.Name = "gridColumn25";
             this.gridColumn25.OptionsColumn.AllowEdit = false;
             this.gridColumn25.Visible = true;
-            this.gridColumn25.VisibleIndex = 1;
-            this.gridColumn25.Width = 84;
+            this.gridColumn25.VisibleIndex = 0;
+            this.gridColumn25.Width = 62;
             // 
-            // gridColumn31
+            // colPOGateNumber
             // 
-            this.gridColumn31.Caption = "TOTAL QTY";
-            this.gridColumn31.FieldName = "DigitalQuantity";
-            this.gridColumn31.Name = "gridColumn31";
-            this.gridColumn31.OptionsColumn.AllowEdit = false;
-            this.gridColumn31.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
-            new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "DigitalQuantity", "{0:0.##}")});
-            this.gridColumn31.Visible = true;
-            this.gridColumn31.VisibleIndex = 2;
-            this.gridColumn31.Width = 129;
+            this.colPOGateNumber.Caption = "GATE NO.";
+            this.colPOGateNumber.FieldName = "GateNumber";
+            this.colPOGateNumber.Name = "colPOGateNumber";
+            this.colPOGateNumber.Visible = true;
+            this.colPOGateNumber.VisibleIndex = 1;
+            this.colPOGateNumber.Width = 94;
+            // 
+            // colPOBookingNo
+            // 
+            this.colPOBookingNo.Caption = "BOOKING NO.";
+            this.colPOBookingNo.FieldName = "BookingNo";
+            this.colPOBookingNo.Name = "colPOBookingNo";
+            this.colPOBookingNo.Visible = true;
+            this.colPOBookingNo.VisibleIndex = 2;
+            this.colPOBookingNo.Width = 126;
+            // 
+            // gridColumn36
+            // 
+            this.gridColumn36.AppearanceCell.Options.UseTextOptions = true;
+            this.gridColumn36.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn36.AppearanceHeader.Options.UseTextOptions = true;
+            this.gridColumn36.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn36.Caption = "P/O NO.";
+            this.gridColumn36.FieldName = "OrderNumber";
+            this.gridColumn36.Name = "gridColumn36";
+            this.gridColumn36.OptionsColumn.AllowEdit = false;
+            this.gridColumn36.Visible = true;
+            this.gridColumn36.VisibleIndex = 3;
+            this.gridColumn36.Width = 141;
+            // 
+            // gridColumn24
+            // 
+            this.gridColumn24.Caption = "TOTAL QTY";
+            this.gridColumn24.FieldName = "DigitalQuantity";
+            this.gridColumn24.Name = "gridColumn24";
+            this.gridColumn24.Visible = true;
+            this.gridColumn24.VisibleIndex = 4;
+            this.gridColumn24.Width = 122;
             // 
             // gridColumn32
             // 
@@ -876,7 +806,7 @@
             this.gridColumn32.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
             new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "QtyRead", "{0:0.##}")});
             this.gridColumn32.Visible = true;
-            this.gridColumn32.VisibleIndex = 3;
+            this.gridColumn32.VisibleIndex = 5;
             this.gridColumn32.Width = 133;
             // 
             // gridColumn26
@@ -885,13 +815,45 @@
             this.gridColumn26.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.gridColumn26.AppearanceHeader.Options.UseTextOptions = true;
             this.gridColumn26.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.gridColumn26.Caption = "TIME";
-            this.gridColumn26.FieldName = "time_count";
+            this.gridColumn26.Caption = "เริ่มรับเวลา";
+            this.gridColumn26.DisplayFormat.FormatString = "HH:mm:ss";
+            this.gridColumn26.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
+            this.gridColumn26.FieldName = "start_time";
             this.gridColumn26.Name = "gridColumn26";
             this.gridColumn26.OptionsColumn.AllowEdit = false;
             this.gridColumn26.Visible = true;
-            this.gridColumn26.VisibleIndex = 4;
-            this.gridColumn26.Width = 166;
+            this.gridColumn26.VisibleIndex = 6;
+            this.gridColumn26.Width = 138;
+            // 
+            // gridColumn28
+            // 
+            this.gridColumn28.AppearanceCell.Options.UseTextOptions = true;
+            this.gridColumn28.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn28.AppearanceHeader.Options.UseTextOptions = true;
+            this.gridColumn28.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn28.Caption = "สิ้นสุดเวลา";
+            this.gridColumn28.DisplayFormat.FormatString = "HH:mm:ss";
+            this.gridColumn28.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
+            this.gridColumn28.FieldName = "stop_time";
+            this.gridColumn28.Name = "gridColumn28";
+            this.gridColumn28.OptionsColumn.AllowEdit = false;
+            this.gridColumn28.Visible = true;
+            this.gridColumn28.VisibleIndex = 7;
+            this.gridColumn28.Width = 138;
+            // 
+            // gcoltime_count
+            // 
+            this.gcoltime_count.AppearanceCell.Options.UseTextOptions = true;
+            this.gcoltime_count.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gcoltime_count.AppearanceHeader.Options.UseTextOptions = true;
+            this.gcoltime_count.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gcoltime_count.Caption = "เป็นเวลา";
+            this.gcoltime_count.FieldName = "time_count";
+            this.gcoltime_count.Name = "gcoltime_count";
+            this.gcoltime_count.OptionsColumn.AllowEdit = false;
+            this.gcoltime_count.Visible = true;
+            this.gcoltime_count.VisibleIndex = 8;
+            this.gcoltime_count.Width = 138;
             // 
             // repositoryItemPictureEdit3
             // 
@@ -899,13 +861,23 @@
             this.repositoryItemPictureEdit3.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             this.repositoryItemPictureEdit3.ZoomAccelerationFactor = 1D;
             // 
+            // repBtnPOCommit
+            // 
+            this.repBtnPOCommit.Appearance.Font = new System.Drawing.Font("Tahoma", 12F);
+            this.repBtnPOCommit.Appearance.Options.UseFont = true;
+            this.repBtnPOCommit.AutoHeight = false;
+            this.repBtnPOCommit.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "Accept", -1, true, true, false, editorButtonImageOptions1)});
+            this.repBtnPOCommit.Name = "repBtnPOCommit";
+            this.repBtnPOCommit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.gcBox);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1080, 318);
+            this.tabPage2.Size = new System.Drawing.Size(1080, 439);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "BOX";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -920,10 +892,11 @@
             this.gcBox.Name = "gcBox";
             this.gcBox.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repPic});
-            this.gcBox.Size = new System.Drawing.Size(1071, 309);
+            this.gcBox.Size = new System.Drawing.Size(1071, 433);
             this.gcBox.TabIndex = 1;
             this.gcBox.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvBox});
+            this.gcBox.Click += new System.EventHandler(this.gcBox_Click);
             // 
             // gvBox
             // 
@@ -934,12 +907,16 @@
             this.gvBox.Appearance.Row.Font = new System.Drawing.Font("Tahoma", 12F);
             this.gvBox.Appearance.Row.Options.UseFont = true;
             this.gvBox.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.gridColumn27,
+            this.gridColumn31,
+            this.gridColumn29,
             this.gridColumn20,
             this.gridColumn5,
             this.gridColumn4,
             this.colIDDB,
             this.gridColumn11,
-            this.gridColumn2});
+            this.gridColumn2,
+            this.gridColumn30});
             this.gvBox.GridControl = this.gcBox;
             this.gvBox.Name = "gvBox";
             this.gvBox.OptionsView.ColumnAutoWidth = false;
@@ -949,15 +926,53 @@
             this.gvBox.OptionsView.ShowGroupPanel = false;
             this.gvBox.RowStyle += new DevExpress.XtraGrid.Views.Grid.RowStyleEventHandler(this.gvBox_RowStyle);
             // 
+            // gridColumn27
+            // 
+            this.gridColumn27.Caption = "No.";
+            this.gridColumn27.FieldName = "row";
+            this.gridColumn27.Name = "gridColumn27";
+            this.gridColumn27.OptionsColumn.AllowEdit = false;
+            this.gridColumn27.Visible = true;
+            this.gridColumn27.VisibleIndex = 0;
+            this.gridColumn27.Width = 60;
+            // 
+            // gridColumn31
+            // 
+            this.gridColumn31.AppearanceCell.Options.UseTextOptions = true;
+            this.gridColumn31.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn31.AppearanceHeader.Options.UseTextOptions = true;
+            this.gridColumn31.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn31.Caption = "GATE NO.";
+            this.gridColumn31.FieldName = "GateNumber";
+            this.gridColumn31.Name = "gridColumn31";
+            this.gridColumn31.OptionsColumn.AllowEdit = false;
+            this.gridColumn31.Visible = true;
+            this.gridColumn31.VisibleIndex = 1;
+            this.gridColumn31.Width = 84;
+            // 
+            // gridColumn29
+            // 
+            this.gridColumn29.AppearanceCell.Options.UseTextOptions = true;
+            this.gridColumn29.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn29.AppearanceHeader.Options.UseTextOptions = true;
+            this.gridColumn29.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn29.Caption = "BOOKING NO.";
+            this.gridColumn29.FieldName = "BookingNo";
+            this.gridColumn29.Name = "gridColumn29";
+            this.gridColumn29.OptionsColumn.AllowEdit = false;
+            this.gridColumn29.Visible = true;
+            this.gridColumn29.VisibleIndex = 2;
+            this.gridColumn29.Width = 113;
+            // 
             // gridColumn20
             // 
             this.gridColumn20.Caption = "P/O NO.";
             this.gridColumn20.FieldName = "OrderNumber";
             this.gridColumn20.Name = "gridColumn20";
             this.gridColumn20.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
-            new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Count, "OrderNumber", "Total {0} BOXs")});
+            new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Count, "OrderNumber", "Total {0} BOXES")});
             this.gridColumn20.Visible = true;
-            this.gridColumn20.VisibleIndex = 0;
+            this.gridColumn20.VisibleIndex = 3;
             this.gridColumn20.Width = 141;
             // 
             // gridColumn5
@@ -966,49 +981,55 @@
             this.gridColumn5.FieldName = "StoreNumber";
             this.gridColumn5.Name = "gridColumn5";
             this.gridColumn5.Visible = true;
-            this.gridColumn5.VisibleIndex = 1;
+            this.gridColumn5.VisibleIndex = 4;
             // 
             // gridColumn4
             // 
-            this.gridColumn4.Caption = "BOX NO";
+            this.gridColumn4.Caption = "BOX NO.";
             this.gridColumn4.FieldName = "BoxOfTotal";
             this.gridColumn4.Name = "gridColumn4";
             this.gridColumn4.Visible = true;
-            this.gridColumn4.VisibleIndex = 2;
+            this.gridColumn4.VisibleIndex = 5;
             // 
             // colIDDB
             // 
-            this.colIDDB.Caption = "CID";
+            this.colIDDB.Caption = "CID.";
             this.colIDDB.FieldName = "ContainerId";
             this.colIDDB.Name = "colIDDB";
             this.colIDDB.OptionsColumn.AllowEdit = false;
             this.colIDDB.OptionsColumn.ReadOnly = true;
             this.colIDDB.Visible = true;
-            this.colIDDB.VisibleIndex = 3;
+            this.colIDDB.VisibleIndex = 6;
             this.colIDDB.Width = 210;
             // 
             // gridColumn11
             // 
-            this.gridColumn11.Caption = "TOTAL QTY";
+            this.gridColumn11.Caption = "TOTAL QTY.";
             this.gridColumn11.FieldName = "DigitalQuantity";
             this.gridColumn11.Name = "gridColumn11";
             this.gridColumn11.OptionsColumn.AllowEdit = false;
             this.gridColumn11.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
             new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "DigitalQuantity", "{0:0.##}")});
             this.gridColumn11.Visible = true;
-            this.gridColumn11.VisibleIndex = 4;
-            this.gridColumn11.Width = 101;
+            this.gridColumn11.VisibleIndex = 7;
+            this.gridColumn11.Width = 124;
             // 
             // gridColumn2
             // 
-            this.gridColumn2.Caption = "QTY READ";
+            this.gridColumn2.Caption = "QTY.  READ";
             this.gridColumn2.FieldName = "QtyRead";
             this.gridColumn2.Name = "gridColumn2";
             this.gridColumn2.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
             new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "QtyRead", "{0:0.##}")});
             this.gridColumn2.Visible = true;
-            this.gridColumn2.VisibleIndex = 5;
-            this.gridColumn2.Width = 110;
+            this.gridColumn2.VisibleIndex = 8;
+            this.gridColumn2.Width = 123;
+            // 
+            // gridColumn30
+            // 
+            this.gridColumn30.Caption = "OrderNumber";
+            this.gridColumn30.FieldName = "OrderNumber";
+            this.gridColumn30.Name = "gridColumn30";
             // 
             // repPic
             // 
@@ -1021,7 +1042,7 @@
             this.tabPage3.Controls.Add(this.gcUPC);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1080, 318);
+            this.tabPage3.Size = new System.Drawing.Size(1080, 439);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "SKU";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1036,7 +1057,7 @@
             this.gcUPC.Name = "gcUPC";
             this.gcUPC.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemPictureEdit1});
-            this.gcUPC.Size = new System.Drawing.Size(1074, 312);
+            this.gcUPC.Size = new System.Drawing.Size(1074, 432);
             this.gcUPC.TabIndex = 2;
             this.gcUPC.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvUPC});
@@ -1050,6 +1071,9 @@
             this.gvUPC.Appearance.Row.Font = new System.Drawing.Font("Tahoma", 12F);
             this.gvUPC.Appearance.Row.Options.UseFont = true;
             this.gvUPC.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.gridColumn13,
+            this.gridColumn34,
+            this.gridColumn33,
             this.gridColumn19,
             this.gridColumn17,
             this.gridColumn3,
@@ -1068,6 +1092,44 @@
             this.gvUPC.OptionsView.ShowGroupPanel = false;
             this.gvUPC.RowStyle += new DevExpress.XtraGrid.Views.Grid.RowStyleEventHandler(this.gvUPC_RowStyle);
             // 
+            // gridColumn13
+            // 
+            this.gridColumn13.Caption = "No.";
+            this.gridColumn13.FieldName = "rw";
+            this.gridColumn13.Name = "gridColumn13";
+            this.gridColumn13.OptionsColumn.AllowEdit = false;
+            this.gridColumn13.Visible = true;
+            this.gridColumn13.VisibleIndex = 0;
+            this.gridColumn13.Width = 54;
+            // 
+            // gridColumn34
+            // 
+            this.gridColumn34.AppearanceCell.Options.UseTextOptions = true;
+            this.gridColumn34.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn34.AppearanceHeader.Options.UseTextOptions = true;
+            this.gridColumn34.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn34.Caption = "GATE NO.";
+            this.gridColumn34.FieldName = "GateNumber";
+            this.gridColumn34.Name = "gridColumn34";
+            this.gridColumn34.OptionsColumn.AllowEdit = false;
+            this.gridColumn34.Visible = true;
+            this.gridColumn34.VisibleIndex = 1;
+            this.gridColumn34.Width = 84;
+            // 
+            // gridColumn33
+            // 
+            this.gridColumn33.AppearanceCell.Options.UseTextOptions = true;
+            this.gridColumn33.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn33.AppearanceHeader.Options.UseTextOptions = true;
+            this.gridColumn33.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.gridColumn33.Caption = "BOOKING NO.";
+            this.gridColumn33.FieldName = "BookingNo";
+            this.gridColumn33.Name = "gridColumn33";
+            this.gridColumn33.OptionsColumn.AllowEdit = false;
+            this.gridColumn33.Visible = true;
+            this.gridColumn33.VisibleIndex = 2;
+            this.gridColumn33.Width = 113;
+            // 
             // gridColumn19
             // 
             this.gridColumn19.Caption = "P/O NO.";
@@ -1077,8 +1139,8 @@
             this.gridColumn19.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
             new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Count, "OrderNumber", "Total {0} SKU")});
             this.gridColumn19.Visible = true;
-            this.gridColumn19.VisibleIndex = 0;
-            this.gridColumn19.Width = 95;
+            this.gridColumn19.VisibleIndex = 3;
+            this.gridColumn19.Width = 141;
             // 
             // gridColumn17
             // 
@@ -1087,46 +1149,46 @@
             this.gridColumn17.Name = "gridColumn17";
             this.gridColumn17.OptionsColumn.AllowEdit = false;
             this.gridColumn17.Visible = true;
-            this.gridColumn17.VisibleIndex = 1;
+            this.gridColumn17.VisibleIndex = 4;
             // 
             // gridColumn3
             // 
-            this.gridColumn3.Caption = "BOX NO";
+            this.gridColumn3.Caption = "BOX NO.";
             this.gridColumn3.FieldName = "BoxOfTotal";
             this.gridColumn3.Name = "gridColumn3";
             this.gridColumn3.OptionsColumn.AllowEdit = false;
             this.gridColumn3.Visible = true;
-            this.gridColumn3.VisibleIndex = 2;
+            this.gridColumn3.VisibleIndex = 5;
             this.gridColumn3.Width = 73;
             // 
             // gridColumn21
             // 
-            this.gridColumn21.Caption = "CID";
+            this.gridColumn21.Caption = "CID.";
             this.gridColumn21.FieldName = "ContainerId";
             this.gridColumn21.Name = "gridColumn21";
             this.gridColumn21.OptionsColumn.AllowEdit = false;
             this.gridColumn21.Visible = true;
-            this.gridColumn21.VisibleIndex = 3;
+            this.gridColumn21.VisibleIndex = 6;
             this.gridColumn21.Width = 169;
             // 
             // gridColumn7
             // 
-            this.gridColumn7.Caption = "SKU";
+            this.gridColumn7.Caption = "SKU.";
             this.gridColumn7.FieldName = "ProductSku";
             this.gridColumn7.Name = "gridColumn7";
             this.gridColumn7.OptionsColumn.AllowEdit = false;
             this.gridColumn7.Visible = true;
-            this.gridColumn7.VisibleIndex = 4;
+            this.gridColumn7.VisibleIndex = 7;
             this.gridColumn7.Width = 135;
             // 
             // gridColumn8
             // 
-            this.gridColumn8.Caption = "UPC";
+            this.gridColumn8.Caption = "UPC.";
             this.gridColumn8.FieldName = "Upc";
             this.gridColumn8.Name = "gridColumn8";
             this.gridColumn8.OptionsColumn.AllowEdit = false;
             this.gridColumn8.Visible = true;
-            this.gridColumn8.VisibleIndex = 5;
+            this.gridColumn8.VisibleIndex = 8;
             this.gridColumn8.Width = 154;
             // 
             // gridColumn9
@@ -1136,20 +1198,20 @@
             this.gridColumn9.Name = "gridColumn9";
             this.gridColumn9.OptionsColumn.AllowEdit = false;
             this.gridColumn9.Visible = true;
-            this.gridColumn9.VisibleIndex = 6;
+            this.gridColumn9.VisibleIndex = 9;
             this.gridColumn9.Width = 296;
             // 
             // gridColumn10
             // 
-            this.gridColumn10.Caption = "TOTAL QTY";
+            this.gridColumn10.Caption = "TOTAL QTY.";
             this.gridColumn10.FieldName = "DigitalQuantity";
             this.gridColumn10.Name = "gridColumn10";
             this.gridColumn10.OptionsColumn.AllowEdit = false;
             this.gridColumn10.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
             new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "DigitalQuantity", "{0:0.##}")});
             this.gridColumn10.Visible = true;
-            this.gridColumn10.VisibleIndex = 7;
-            this.gridColumn10.Width = 96;
+            this.gridColumn10.VisibleIndex = 10;
+            this.gridColumn10.Width = 114;
             // 
             // gridColumn22
             // 
@@ -1160,7 +1222,7 @@
             this.gridColumn22.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
             new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "QtyRead", "{0:0.##}")});
             this.gridColumn22.Visible = true;
-            this.gridColumn22.VisibleIndex = 8;
+            this.gridColumn22.VisibleIndex = 11;
             this.gridColumn22.Width = 106;
             // 
             // repositoryItemPictureEdit1
@@ -1169,24 +1231,13 @@
             this.repositoryItemPictureEdit1.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             this.repositoryItemPictureEdit1.ZoomAccelerationFactor = 1D;
             // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.inventoryList);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1080, 318);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Read Tags";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.gcTag);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1080, 318);
+            this.tabPage4.Size = new System.Drawing.Size(1080, 439);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "EPC";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1201,7 +1252,7 @@
             this.gcTag.Name = "gcTag";
             this.gcTag.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemPictureEdit2});
-            this.gcTag.Size = new System.Drawing.Size(1071, 360);
+            this.gcTag.Size = new System.Drawing.Size(1071, 433);
             this.gcTag.TabIndex = 3;
             this.gcTag.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvTag});
@@ -1214,10 +1265,11 @@
             this.gridColumn12,
             this.gridColumn14,
             this.gridColumn15,
-            this.gridColumn13,
             this.gridColumn16,
             this.gridColumn23,
-            this.gridColumn6});
+            this.gridColumn6,
+            this.gridColumn35,
+            this.gridColumn37});
             this.gvTag.GridControl = this.gcTag;
             this.gvTag.Name = "gvTag";
             this.gvTag.OptionsView.ColumnAutoWidth = false;
@@ -1225,13 +1277,13 @@
             this.gvTag.OptionsView.ShowAutoFilterRow = true;
             this.gvTag.OptionsView.ShowFooter = true;
             this.gvTag.OptionsView.ShowGroupPanel = false;
+            this.gvTag.RowStyle += new DevExpress.XtraGrid.Views.Grid.RowStyleEventHandler(this.gvTag_RowStyle);
             // 
             // gridColumn18
             // 
-            this.gridColumn18.Caption = "EPC ID";
+            this.gridColumn18.Caption = "EPC ID.";
             this.gridColumn18.FieldName = "EPC";
             this.gridColumn18.Name = "gridColumn18";
-            this.gridColumn18.OptionsColumn.AllowEdit = false;
             this.gridColumn18.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
             new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Count, "EPC", "Total {0} EPC")});
             this.gridColumn18.Visible = true;
@@ -1240,7 +1292,7 @@
             // 
             // gridColumn1
             // 
-            this.gridColumn1.Caption = "Box ID";
+            this.gridColumn1.Caption = "Box ID.";
             this.gridColumn1.FieldName = "ContainerId";
             this.gridColumn1.Name = "gridColumn1";
             this.gridColumn1.OptionsColumn.AllowEdit = false;
@@ -1260,7 +1312,7 @@
             // 
             // gridColumn14
             // 
-            this.gridColumn14.Caption = "SKU";
+            this.gridColumn14.Caption = "SKU.";
             this.gridColumn14.FieldName = "ProductSku";
             this.gridColumn14.Name = "gridColumn14";
             this.gridColumn14.OptionsColumn.AllowEdit = false;
@@ -1270,24 +1322,13 @@
             // 
             // gridColumn15
             // 
-            this.gridColumn15.Caption = "UPC";
+            this.gridColumn15.Caption = "UPC.";
             this.gridColumn15.FieldName = "Upc";
             this.gridColumn15.Name = "gridColumn15";
             this.gridColumn15.OptionsColumn.AllowEdit = false;
             this.gridColumn15.Visible = true;
             this.gridColumn15.VisibleIndex = 2;
             this.gridColumn15.Width = 172;
-            // 
-            // gridColumn13
-            // 
-            this.gridColumn13.Caption = "Location";
-            this.gridColumn13.FieldName = "LocationName";
-            this.gridColumn13.Name = "gridColumn13";
-            this.gridColumn13.OptionsColumn.AllowEdit = false;
-            this.gridColumn13.OptionsColumn.ReadOnly = true;
-            this.gridColumn13.Visible = true;
-            this.gridColumn13.VisibleIndex = 6;
-            this.gridColumn13.Width = 76;
             // 
             // gridColumn16
             // 
@@ -1306,7 +1347,7 @@
             this.gridColumn23.Name = "gridColumn23";
             this.gridColumn23.OptionsColumn.AllowEdit = false;
             this.gridColumn23.Visible = true;
-            this.gridColumn23.VisibleIndex = 7;
+            this.gridColumn23.VisibleIndex = 6;
             // 
             // gridColumn6
             // 
@@ -1319,92 +1360,86 @@
             this.gridColumn6.VisibleIndex = 5;
             this.gridColumn6.Width = 147;
             // 
+            // gridColumn35
+            // 
+            this.gridColumn35.AppearanceCell.Options.UseTextOptions = true;
+            this.gridColumn35.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.gridColumn35.AppearanceHeader.Options.UseTextOptions = true;
+            this.gridColumn35.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.gridColumn35.Caption = "Qty Read";
+            this.gridColumn35.FieldName = "QtyRead";
+            this.gridColumn35.Name = "gridColumn35";
+            this.gridColumn35.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
+            new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "QtyRead", "Received={0:0} EPC")});
+            this.gridColumn35.Visible = true;
+            this.gridColumn35.VisibleIndex = 7;
+            // 
+            // gridColumn37
+            // 
+            this.gridColumn37.Caption = "PRProductItemId";
+            this.gridColumn37.FieldName = "PRProductItemId";
+            this.gridColumn37.Name = "gridColumn37";
+            // 
             // repositoryItemPictureEdit2
             // 
             this.repositoryItemPictureEdit2.Name = "repositoryItemPictureEdit2";
             this.repositoryItemPictureEdit2.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Zoom;
             this.repositoryItemPictureEdit2.ZoomAccelerationFactor = 1D;
             // 
-            // progressBar1
+            // tabPage6
             // 
-            this.progressBar1.Location = new System.Drawing.Point(577, 102);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(445, 18);
-            this.progressBar1.TabIndex = 30;
-            this.progressBar1.Visible = false;
+            this.tabPage6.Controls.Add(this.lstSyncLog);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(1080, 439);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "SYNC LOG";
+            this.tabPage6.UseVisualStyleBackColor = true;
             // 
-            // bntClear
+            // lstSyncLog
             // 
-            this.bntClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
-            this.bntClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-            this.bntClear.Location = new System.Drawing.Point(397, 96);
-            this.bntClear.Name = "bntClear";
-            this.bntClear.Size = new System.Drawing.Size(190, 54);
-            this.bntClear.TabIndex = 31;
-            this.bntClear.Text = "Clear";
-            this.bntClear.UseVisualStyleBackColor = false;
-            this.bntClear.Click += new System.EventHandler(this.bntClear_Click);
+            this.lstSyncLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstSyncLog.FormattingEnabled = true;
+            this.lstSyncLog.Location = new System.Drawing.Point(3, 4);
+            this.lstSyncLog.Name = "lstSyncLog";
+            this.lstSyncLog.Size = new System.Drawing.Size(1071, 433);
+            this.lstSyncLog.TabIndex = 0;
             // 
-            // btnLoadPO
+            // tabPage1
             // 
-            this.btnLoadPO.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.btnLoadPO.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-            this.btnLoadPO.Location = new System.Drawing.Point(5, 96);
-            this.btnLoadPO.Name = "btnLoadPO";
-            this.btnLoadPO.Size = new System.Drawing.Size(190, 54);
-            this.btnLoadPO.TabIndex = 31;
-            this.btnLoadPO.Text = "Load P/O";
-            this.btnLoadPO.UseVisualStyleBackColor = false;
-            this.btnLoadPO.Click += new System.EventHandler(this.btnLoadPO_Click);
+            this.tabPage1.Controls.Add(this.lblTotalEPC);
+            this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.inventoryList);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(1080, 439);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Read Tags";
+            this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // cboVendor
+            // lblTotalEPC
             // 
-            this.cboVendor.Location = new System.Drawing.Point(129, 25);
-            this.cboVendor.Name = "cboVendor";
-            this.cboVendor.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 12F);
-            this.cboVendor.Properties.Appearance.Options.UseFont = true;
-            this.cboVendor.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboVendor.Properties.Columns.AddRange(new DevExpress.XtraEditors.Controls.LookUpColumnInfo[] {
-            new DevExpress.XtraEditors.Controls.LookUpColumnInfo("CompanyName", "Vendor")});
-            this.cboVendor.Properties.NullText = "";
-            this.cboVendor.Size = new System.Drawing.Size(238, 26);
-            this.cboVendor.TabIndex = 32;
-            this.cboVendor.EditValueChanged += new System.EventHandler(this.cboVendor_EditValueChanged);
+            this.lblTotalEPC.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblTotalEPC.AutoSize = true;
+            this.lblTotalEPC.Location = new System.Drawing.Point(77, 417);
+            this.lblTotalEPC.Name = "lblTotalEPC";
+            this.lblTotalEPC.Size = new System.Drawing.Size(13, 13);
+            this.lblTotalEPC.TabIndex = 2;
+            this.lblTotalEPC.Text = "0";
             // 
-            // label14
+            // label1
             // 
-            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.label14.Location = new System.Drawing.Point(31, 24);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(92, 28);
-            this.label14.TabIndex = 25;
-            this.label14.Text = "Vendor : ";
-            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label15
-            // 
-            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.label15.Location = new System.Drawing.Point(4, 56);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(119, 28);
-            this.label15.TabIndex = 25;
-            this.label15.Text = "Booking No. : ";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // cboBookingNo
-            // 
-            this.cboBookingNo.Location = new System.Drawing.Point(129, 57);
-            this.cboBookingNo.Name = "cboBookingNo";
-            this.cboBookingNo.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 12F);
-            this.cboBookingNo.Properties.Appearance.Options.UseFont = true;
-            this.cboBookingNo.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboBookingNo.Properties.Columns.AddRange(new DevExpress.XtraEditors.Controls.LookUpColumnInfo[] {
-            new DevExpress.XtraEditors.Controls.LookUpColumnInfo("BookingNumber", "Booking No.")});
-            this.cboBookingNo.Properties.NullText = "";
-            this.cboBookingNo.Size = new System.Drawing.Size(238, 26);
-            this.cboBookingNo.TabIndex = 32;
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 417);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(64, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Total EPC : ";
             // 
             // backgroundWorker1
             // 
@@ -1412,34 +1447,148 @@
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             // 
+            // defaultLookAndFeel1
+            // 
+            this.defaultLookAndFeel1.LookAndFeel.SkinName = "VS2010";
+            // 
+            // timer1_timecount
+            // 
+            this.timer1_timecount.Interval = 1000;
+            this.timer1_timecount.Tick += new System.EventHandler(this.timer1_timecount_Tick);
+            // 
+            // btnStartAuto
+            // 
+            this.btnStartAuto.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnStartAuto.ImageOptions.Image")));
+            this.btnStartAuto.Location = new System.Drawing.Point(1, 1);
+            this.btnStartAuto.Name = "btnStartAuto";
+            this.btnStartAuto.Size = new System.Drawing.Size(133, 27);
+            this.btnStartAuto.TabIndex = 39;
+            this.btnStartAuto.Text = "Start Auto Scan";
+            this.btnStartAuto.Click += new System.EventHandler(this.btnStartAuto_Click);
+            // 
+            // btnStopAuto
+            // 
+            this.btnStopAuto.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnStopAuto.ImageOptions.Image")));
+            this.btnStopAuto.Location = new System.Drawing.Point(140, 2);
+            this.btnStopAuto.Name = "btnStopAuto";
+            this.btnStopAuto.Size = new System.Drawing.Size(110, 27);
+            this.btnStopAuto.TabIndex = 39;
+            this.btnStopAuto.Text = "Stop Auto Scan";
+            this.btnStopAuto.Click += new System.EventHandler(this.btnStopAuto_Click);
+            // 
+            // btnStartRead
+            // 
+            this.btnStartRead.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
+            this.btnStartRead.Appearance.Options.UseFont = true;
+            this.btnStartRead.Location = new System.Drawing.Point(343, 2);
+            this.btnStartRead.Name = "btnStartRead";
+            this.btnStartRead.Size = new System.Drawing.Size(146, 27);
+            this.btnStartRead.TabIndex = 39;
+            this.btnStartRead.Text = "Start Reading";
+            this.btnStartRead.Click += new System.EventHandler(this.btnStartRead_Click);
+            // 
+            // btnClear
+            // 
+            this.btnClear.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnClear.ImageOptions.Image")));
+            this.btnClear.Location = new System.Drawing.Point(495, 2);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(111, 27);
+            this.btnClear.TabIndex = 39;
+            this.btnClear.Text = "Clear";
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
+            // timer_getCommand
+            // 
+            this.timer_getCommand.Interval = 1000;
+            this.timer_getCommand.Tick += new System.EventHandler(this.timer_getCommand_Tick);
+            // 
+            // btnScanCommandManual
+            // 
+            this.btnScanCommandManual.Location = new System.Drawing.Point(805, 12);
+            this.btnScanCommandManual.Name = "btnScanCommandManual";
+            this.btnScanCommandManual.Size = new System.Drawing.Size(147, 22);
+            this.btnScanCommandManual.TabIndex = 40;
+            this.btnScanCommandManual.Text = "Scan Command Manual";
+            this.btnScanCommandManual.UseVisualStyleBackColor = true;
+            this.btnScanCommandManual.Visible = false;
+            this.btnScanCommandManual.Click += new System.EventHandler(this.btnScanCommandManual_Click);
+            // 
+            // btnResetRequest
+            // 
+            this.btnResetRequest.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnResetRequest.ImageOptions.Image")));
+            this.btnResetRequest.Location = new System.Drawing.Point(674, 2);
+            this.btnResetRequest.Name = "btnResetRequest";
+            this.btnResetRequest.Size = new System.Drawing.Size(115, 27);
+            this.btnResetRequest.TabIndex = 39;
+            this.btnResetRequest.Text = "Reset Request";
+            this.btnResetRequest.Click += new System.EventHandler(this.btnResetRequest_Click);
+            // 
+            // timer_reconnect
+            // 
+            this.timer_reconnect.Enabled = true;
+            this.timer_reconnect.Interval = 5000;
+            this.timer_reconnect.Tick += new System.EventHandler(this.timer_reconnect_Tick);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuShow,
+            this.mnuExit});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(104, 48);
+            // 
+            // mnuShow
+            // 
+            this.mnuShow.Name = "mnuShow";
+            this.mnuShow.Size = new System.Drawing.Size(103, 22);
+            this.mnuShow.Text = "Show";
+            this.mnuShow.Click += new System.EventHandler(this.mnuShow_Click);
+            // 
+            // mnuExit
+            // 
+            this.mnuExit.Name = "mnuExit";
+            this.mnuExit.Size = new System.Drawing.Size(103, 22);
+            this.mnuExit.Text = "Exit";
+            this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "RFID DC Setting";
+            this.notifyIcon1.Visible = true;
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            // 
+            // timer_clear_buffer
+            // 
+            this.timer_clear_buffer.Interval = 20000;
+            this.timer_clear_buffer.Tick += new System.EventHandler(this.timer_clear_buffer_Tick);
+            // 
             // frmAppForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1101, 528);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.cboBookingNo);
-            this.Controls.Add(this.cboVendor);
-            this.Controls.Add(this.btnLoadPO);
-            this.Controls.Add(this.label15);
-            this.Controls.Add(this.bntClear);
-            this.Controls.Add(this.label14);
-            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.btnScanCommandManual);
+            this.Controls.Add(this.btnStopAuto);
+            this.Controls.Add(this.btnResetRequest);
+            this.Controls.Add(this.btnClear);
+            this.Controls.Add(this.btnStartRead);
+            this.Controls.Add(this.btnStartAuto);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.clearReports_CB);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.mainMenuStrip);
-            this.Controls.Add(this.readButton);
             this.MainMenuStrip = this.mainMenuStrip;
             this.MinimumSize = new System.Drawing.Size(16, 250);
             this.Name = "frmAppForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "RFID Demo DC Receive";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Text = "RFID DC Receive Reader IP : xx.xx.xx.xx";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AppForm_FormClosing);
             this.Load += new System.EventHandler(this.AppForm_Load);
             this.ClientSizeChanged += new System.EventHandler(this.AppForm_ClientSizeChanged);
+            this.Move += new System.EventHandler(this.frmAppForm_Move);
             this.mainMenuStrip.ResumeLayout(false);
             this.mainMenuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
@@ -1449,12 +1598,12 @@
             this.transmitPowerGB.ResumeLayout(false);
             this.transmitPowerGB.PerformLayout();
             this.dataContextMenuStrip.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gcPO)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvPO)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repBtnPOCommit)).EndInit();
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gcBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvBox)).EndInit();
@@ -1463,13 +1612,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.gcUPC)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvUPC)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit1)).EndInit();
-            this.tabPage1.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gcTag)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvTag)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemPictureEdit2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboVendor.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboBookingNo.Properties)).EndInit();
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1486,7 +1636,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.Label gpiLabel;
-        private System.Windows.Forms.Button readButton;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
@@ -1524,15 +1673,8 @@
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.Label totalTagValueLabel;
-        private System.Windows.Forms.Label totalTagLabel;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.CheckBox clearReports_CB;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label lblTotalBox;
-        private System.Windows.Forms.Label lblTotalSKU;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
@@ -1547,7 +1689,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn6;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn12;
-        private DevExpress.XtraGrid.Columns.GridColumn gridColumn13;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn14;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn15;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn16;
@@ -1561,17 +1702,12 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn10;
         private DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit repositoryItemPictureEdit1;
         private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn5;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn4;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn2;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn19;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn17;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn3;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label lblNumberOfBox;
-        private System.Windows.Forms.Label lblTotalUPC;
-        private System.Windows.Forms.Label label17;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn20;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn21;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn22;
@@ -1579,19 +1715,49 @@
         private System.Windows.Forms.TabPage tabPage5;
         private DevExpress.XtraGrid.GridControl gcPO;
         private DevExpress.XtraGrid.Views.Grid.GridView gvPO;
-        private DevExpress.XtraGrid.Columns.GridColumn gridColumn24;
-        private DevExpress.XtraGrid.Columns.GridColumn gridColumn25;
-        private DevExpress.XtraGrid.Columns.GridColumn gridColumn31;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn32;
         private DevExpress.XtraEditors.Repository.RepositoryItemPictureEdit repositoryItemPictureEdit3;
-        private System.Windows.Forms.Button bntClear;
-        private System.Windows.Forms.Button btnLoadPO;
         private System.Windows.Forms.ColumnHeader columnHeader9;
-        private DevExpress.XtraEditors.LookUpEdit cboVendor;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label15;
-        private DevExpress.XtraEditors.LookUpEdit cboBookingNo;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn26;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn13;
+        private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repBtnPOCommit;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn25;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn27;
+        private DevExpress.LookAndFeel.DefaultLookAndFeel defaultLookAndFeel1;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.ListBox lstSyncLog;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn28;
+        private DevExpress.XtraGrid.Columns.GridColumn gcoltime_count;
+        private System.Windows.Forms.Timer timer1_timecount;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn30;
+        private System.Windows.Forms.ToolStripMenuItem mnuGate;
+        private System.Windows.Forms.ToolStripMenuItem mnuDevice;
+        private System.Windows.Forms.ToolStripMenuItem mnuSettingDeviceToGate;
+        private DevExpress.XtraGrid.Columns.GridColumn colPOGateNumber;
+        private DevExpress.XtraGrid.Columns.GridColumn colPOBookingNo;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn24;
+        internal DevExpress.XtraEditors.SimpleButton btnStartAuto;
+        internal DevExpress.XtraEditors.SimpleButton btnStopAuto;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn31;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn29;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn34;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn33;
+        internal DevExpress.XtraEditors.SimpleButton btnStartRead;
+        internal DevExpress.XtraEditors.SimpleButton btnClear;
+        private System.Windows.Forms.Label lblTotalEPC;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Timer timer_getCommand;
+        private System.Windows.Forms.Button btnScanCommandManual;
+        internal DevExpress.XtraEditors.SimpleButton btnResetRequest;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn35;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn36;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn37;
+        private System.Windows.Forms.Timer timer_reconnect;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem mnuShow;
+        private System.Windows.Forms.ToolStripMenuItem mnuExit;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.Timer timer_clear_buffer;
     }
 }

@@ -1,4 +1,4 @@
-namespace CS_RFID3_Host_Sample1
+namespace DCRFIDReader
 {
     partial class ReadForm
     {

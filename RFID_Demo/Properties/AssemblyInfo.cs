@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("RFID Demo")]
+[assembly: AssemblyTitle("DC Receive v.1.0.18.0")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("RFID Demo")]
-[assembly: AssemblyProduct("RFID Demo")]
-[assembly: AssemblyCopyright("Copyrights ©2010-2016 Symbol Technologies LLC")]
+[assembly: AssemblyCompany("Smart Reform Plus Co.,Ltd.")]
+[assembly: AssemblyProduct("DC Receive")]
+[assembly: AssemblyCopyright("Copyrights ©2021 Symbol Technologies LLC")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.0.1.0")]
-[assembly: AssemblyFileVersion("1.0.1.0")]
+[assembly: AssemblyVersion("1.0.18.0")]
+[assembly: AssemblyFileVersion("1.0.18.0")]
