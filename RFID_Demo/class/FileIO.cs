@@ -30,4 +30,21 @@ public class FileIO
         {
         }
     }
+
+    public static void WriteLogToFile(string Name, string strToWrite)
+    {
+        System.IO.StreamWriter stream = null;
+        try
+        {
+            string fileName = "Log-" + Name + "-" + DateTime.Now.Date.ToString("yyyyMMdd"); // Strings.Format(DateTime.Now.Date, "yyyyMMdd");
+            stream = new System.IO.StreamWriter(AppDomain.CurrentDomain.BaseDirectory + @"Log\" + fileName + ".txt", false);
+
+            stream.WriteLineAsync(DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " " + strToWrite);
+            stream.Flush();
+            stream.Close();
+        }
+        catch (Exception ex)
+        {
+        }
+    }
 }

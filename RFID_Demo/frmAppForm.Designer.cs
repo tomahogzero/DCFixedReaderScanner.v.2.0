@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions1 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions2 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAppForm));
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.configToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -163,6 +163,7 @@
             this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.timer_clear_buffer = new System.Windows.Forms.Timer(this.components);
+            this.timer_refresh_button = new System.Windows.Forms.Timer(this.components);
             this.mainMenuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.gpiStateGB.SuspendLayout();
@@ -867,7 +868,7 @@
             this.repBtnPOCommit.Appearance.Options.UseFont = true;
             this.repBtnPOCommit.AutoHeight = false;
             this.repBtnPOCommit.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "Accept", -1, true, true, false, editorButtonImageOptions1)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "Accept", -1, true, true, false, editorButtonImageOptions2)});
             this.repBtnPOCommit.Name = "repBtnPOCommit";
             this.repBtnPOCommit.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
             // 
@@ -1564,6 +1565,12 @@
             this.timer_clear_buffer.Interval = 20000;
             this.timer_clear_buffer.Tick += new System.EventHandler(this.timer_clear_buffer_Tick);
             // 
+            // timer_refresh_button
+            // 
+            this.timer_refresh_button.Enabled = true;
+            this.timer_refresh_button.Interval = 5000;
+            this.timer_refresh_button.Tick += new System.EventHandler(this.refresh_button_Tick);
+            // 
             // frmAppForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1759,5 +1766,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuExit;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.Timer timer_clear_buffer;
+        private System.Windows.Forms.Timer timer_refresh_button;
     }
 }

@@ -13,6 +13,7 @@ namespace DCRFIDReader
     {
         private DataTable dtDeviceScan;
         public bool inProcess = false;
+        public bool inProcessRefreshButton = false;
 
         private delegate void dg_update_download_command(string value);
 
@@ -53,7 +54,8 @@ namespace DCRFIDReader
             }
             else
             {
-                lstSyncLog.Items.Insert(0, DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " " + value);
+                //lstSyncLog.Items.Insert(0, DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " " + value);
+                FileIO.WriteLogToFile(deviceip.Replace(".",""), value);
             }
         }
 
@@ -252,6 +254,39 @@ namespace DCRFIDReader
                 {
                     btnStartRead_Click(this, EventArgs.Empty);
                 }
+            }
+        }
+
+        private async Task scan_refresh_button()
+        {
+            if (inProcessRefreshButton == false)
+            {
+                inProcessRefreshButton = true;
+
+                DataTable dt = GetDtButtonView(dcGateNumber);
+                if (dt == null) return;
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if ((bool)dr["isScanning"] == true)
+                    {
+                        // load all data
+                        await load_data_po();
+
+                        currentBookingNo = GetCurrentBooking();
+
+                        // clear tag
+                        await Task.Run(() => {
+                            clear_scan_ui();
+                        });
+
+                        if (btnStartRead.Text == "Start Reading")
+                        {
+                            btnStartRead_Click(this, EventArgs.Empty);
+                        }
+                    }
+                }
+                inProcessRefreshButton = false;
             }
         }
         #endregion
@@ -455,6 +490,24 @@ namespace DCRFIDReader
             try
             {
                 sql = "exec sp_dc_scan_command_view";
+                ds = dbMgr.ExecuteCommand_Select_Ds(sql);
+
+                return ds.Tables[0];
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static DataTable GetDtButtonView(string GateNumber)
+        {
+            DBManager dbMgr = new DBManager();
+            string sql = "";
+            DataSet ds;
+            try
+            {
+                sql = "exec sp_dc_scanbutton_view '" + GateNumber + "'";
                 ds = dbMgr.ExecuteCommand_Select_Ds(sql);
 
                 return ds.Tables[0];

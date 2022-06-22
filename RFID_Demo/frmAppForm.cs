@@ -610,7 +610,7 @@ namespace DCRFIDReader
                     m_ReaderAPI.Events.NotifyInventoryStartEvent = true;
                     m_ReaderAPI.Events.NotifyInventoryStopEvent = true;
 
-                    this.Text = Title + "Connected to " + deviceip;
+                    this.Text = Title + "Connected to " + deviceip + " [" + dcGateNumber + "]";
                     this.connectionStatus.BackgroundImage =
                         global::DCRFIDReader.Properties.Resources.connected;
                 }
@@ -619,7 +619,7 @@ namespace DCRFIDReader
             {
                 if (connectEventArgs.Result.ToString() == "Disconnect Succeed")
                 {
-                    this.Text = Title + " IP : " + deviceip;
+                    this.Text = Title + " IP : " + deviceip + " [" + dcGateNumber + "]";
                     this.connectionStatus.BackgroundImage =
                         global::DCRFIDReader.Properties.Resources.disconnected;
 
@@ -651,7 +651,7 @@ namespace DCRFIDReader
             btnStartAuto.Enabled = true;
             btnStopAuto.Enabled = false;
 
-            this.Text = Title + "IP : " + deviceip;
+            this.Text = Title + "IP : " + deviceip + " [" + dcGateNumber + "]";
 
             try
             {
@@ -671,6 +671,7 @@ namespace DCRFIDReader
             int resetBuffer = aconfig.ResetBuffer_Min() * 60000;
 
             timer_clear_buffer.Interval = resetBuffer;
+            timer_clear_buffer.Enabled = true;
             //if (btnStartRead.Text == "Start Reading")
             //{
             //    btnStartRead_Click(this, EventArgs.Empty);
@@ -995,25 +996,19 @@ namespace DCRFIDReader
                     {
                         MessageBox.Show(res);
                     }
-                    await Task.Run(() =>
-                    {
-                        QTagsUpdate_EPC.updateRead(ref dsTag, tag);
-                        QTagsUpdate.add_box(ref m_form, ref dsBox, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString());
-                        QTagsUpdate.add_product(ref dsProduct, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString(), dr["ProductSku"].ToString());
-                        QTagsUpdate.add_po(ref dsPO, dr["OrderNumber"].ToString());
-                    });
+                    QTagsUpdate_EPC.updateRead(ref dsTag, tag);
+                    QTagsUpdate.add_box(ref m_form, ref dsBox, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString());
+                    QTagsUpdate.add_product(ref dsProduct, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString(), dr["ProductSku"].ToString());
+                    QTagsUpdate.add_po(ref dsPO, dr["OrderNumber"].ToString());
                 }
                 //else {
                 //    QTagsUpdate_EPC.add(ref dsTag, tag,"","", "", "", 0,"", "");
                 //}
 
-                await Task.Run(() =>
-                {
-                    gcTag.Refresh();
-                    gcBox.Refresh();
-                    gcUPC.Refresh();
-                    gcPO.Refresh();
-                });
+                gcTag.Refresh();
+                gcBox.Refresh();
+                gcUPC.Refresh();
+                gcPO.Refresh();
 
                 lblTotalEPC.Text = inventoryList.Items.Count.ToString();
 
@@ -1064,86 +1059,77 @@ namespace DCRFIDReader
 
         private async void gvPO_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
         {
-            await Task.Run(() =>
+            int QtyRead = Convert.ToInt32(gvPO.GetRowCellValue(e.RowHandle, "QtyRead"));
+            int DigitalQuantity = Convert.ToInt32(gvPO.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
+
+
+            if (DigitalQuantity != QtyRead)
             {
-                int QtyRead = Convert.ToInt32(gvPO.GetRowCellValue(e.RowHandle, "QtyRead"));
-                int DigitalQuantity = Convert.ToInt32(gvPO.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
-
-
-                if (DigitalQuantity != QtyRead)
-                {
-                    e.Appearance.BackColor = Color.White;
-                }
-                else
-                {
-                    e.Appearance.BackColor = Color.LightGreen;
-                }
-                //Override any other formatting  
-                e.HighPriority = true;
-            });
+                e.Appearance.BackColor = Color.White;
+            }
+            else
+            {
+                e.Appearance.BackColor = Color.LightGreen;
+            }
+            //Override any other formatting  
+            e.HighPriority = true;
         }
 
         private async void gvBox_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
         {
-            await Task.Run(() =>
+            int QtyRead = Convert.ToInt32(gvBox.GetRowCellValue(e.RowHandle, "QtyRead"));
+            int DigitalQuantity = Convert.ToInt32(gvBox.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
+
+            if (e.RowHandle >= 0)
             {
-                int QtyRead = Convert.ToInt32(gvBox.GetRowCellValue(e.RowHandle, "QtyRead"));
-                int DigitalQuantity = Convert.ToInt32(gvBox.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
-
-                if (e.RowHandle >= 0)
-                {
-                    dsBox.Tables[0].Rows[e.RowHandle]["OrderNumber"].ToString();
-                }
+                dsBox.Tables[0].Rows[e.RowHandle]["OrderNumber"].ToString();
+            }
 
 
-                string cid = "";
+            string cid = "";
 
-                if (gvBox.GetRowCellValue(e.RowHandle, "ContainerId") != null)
-                {
-                    cid = gvBox.GetRowCellValue(e.RowHandle, "ContainerId").ToString();
-                }
+            if (gvBox.GetRowCellValue(e.RowHandle, "ContainerId") != null)
+            {
+                cid = gvBox.GetRowCellValue(e.RowHandle, "ContainerId").ToString();
+            }
 
-                if (DigitalQuantity != QtyRead)
-                {
-                    e.Appearance.BackColor = Color.White;
-                }
-                else
-                {
-                    //if ((DigitalQuantity == QtyRead) && (QtyRead > 0) && (cid != ""))
-                    //{
-                    //    // save cid
-                    //    save_cid(cid, get_tags(cid));
+            if (DigitalQuantity != QtyRead)
+            {
+                e.Appearance.BackColor = Color.White;
+            }
+            else
+            {
+                //if ((DigitalQuantity == QtyRead) && (QtyRead > 0) && (cid != ""))
+                //{
+                //    // save cid
+                //    save_cid(cid, get_tags(cid));
 
-                    //    QTags.accept_box(OrderNumber, cid);
-                    //    Application.DoEvents();
-                    //}
-                    e.Appearance.BackColor = Color.LightGreen;
-                }
+                //    QTags.accept_box(OrderNumber, cid);
+                //    Application.DoEvents();
+                //}
+                e.Appearance.BackColor = Color.LightGreen;
+            }
 
-                //Override any other formatting  
-                e.HighPriority = true;
-            });
+            //Override any other formatting  
+            e.HighPriority = true;
         }
 
         private async void gvUPC_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
         {
-            await Task.Run(() =>
+            int QtyRead = Convert.ToInt32(gvUPC.GetRowCellValue(e.RowHandle, "QtyRead"));
+            int DigitalQuantity = Convert.ToInt32(gvUPC.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
+
+            if (DigitalQuantity != QtyRead)
             {
-                int QtyRead = Convert.ToInt32(gvUPC.GetRowCellValue(e.RowHandle, "QtyRead"));
-                int DigitalQuantity = Convert.ToInt32(gvUPC.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
+                e.Appearance.BackColor = Color.White;
+            }
+            else
+            {
+                e.Appearance.BackColor = Color.LightGreen;
+            }
 
-                if (DigitalQuantity != QtyRead)
-                {
-                    e.Appearance.BackColor = Color.White;
-                }
-                else
-                {
-                    e.Appearance.BackColor = Color.LightGreen;
-                }
-
-                //Override any other formatting  
-                e.HighPriority = true;
-            });
+            //Override any other formatting  
+            e.HighPriority = true;
         }
 
 
@@ -1398,6 +1384,10 @@ namespace DCRFIDReader
             btnStopAuto.Enabled = true;
 
             timer_getCommand.Enabled = true;
+
+            // ทุกๆ 2 นาที refresh ยอด po แล้ว rescan ปุ่ม
+            timer_refresh_button.Interval = (1000 * 60) * 2;
+            timer_refresh_button.Enabled = true;
         }
 
         private void btnStopAuto_Click(object sender, EventArgs e)
@@ -1406,6 +1396,7 @@ namespace DCRFIDReader
             btnStopAuto.Enabled = false;
 
             timer_getCommand.Enabled = false;
+            timer_refresh_button.Enabled = false;
         }
 
         private async void btnScanCommandManual_Click(object sender, EventArgs e)
@@ -1501,6 +1492,11 @@ namespace DCRFIDReader
 
                 }
             });
+        }
+
+        private async void refresh_button_Tick(object sender, EventArgs e)
+        {
+            await scan_refresh_button();
         }
     }
 }
