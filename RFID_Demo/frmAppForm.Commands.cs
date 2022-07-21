@@ -55,21 +55,29 @@ namespace DCRFIDReader
             else
             {
                 //lstSyncLog.Items.Insert(0, DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " " + value);
-                FileIO.WriteLogToFile(deviceip.Replace(".",""), value);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""),"update_sync_log : " + value);
             }
         }
 
+        private delegate void dg_clear_scan_ui();
         private void clear_scan_ui()
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(() => { clear_scan_ui(); }));
+                this.Invoke(new dg_clear_scan_ui(clear_scan_ui));
             }
             else
             {
-                inventoryList.Items.Clear();
-                m_TagTable.Clear();
-                lblTotalEPC.Text = "0";
+                try
+                {
+                    inventoryList.Items.Clear();
+                    m_TagTable.Clear();
+                    lblTotalEPC.Text = "0";
+                }
+                catch (Exception ex)
+                {
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "clear_scan_ui : " + ex.Message);
+                }
             }
         }
 
@@ -102,15 +110,21 @@ namespace DCRFIDReader
                     switch ((int)dr["CommandCode"])
                     {
                         case 101: // SCAN
+                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_start : start");
                             await command_start();
+                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_start : end");
                             break;
 
                         case 102: // Re Scan
+                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_rescan : start");
                             await command_rescan();
+                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_rescan : end");
                             break;
 
                         case 103: // Stop
+                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_stop : start");
                             await command_stop();
+                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_stop : stop");
                             break;
                         default:
                             break;
@@ -127,6 +141,7 @@ namespace DCRFIDReader
             if (res != "")
             {
                 update_sync_log(res);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_start : " + res);
             }
             else
             {
@@ -137,7 +152,8 @@ namespace DCRFIDReader
                 currentBookingNo = GetCurrentBooking();
 
                 // clear tag
-                await Task.Run(() => {
+                await Task.Run(() =>
+                {
                     clear_scan_ui();
                 });
 
@@ -152,6 +168,7 @@ namespace DCRFIDReader
                     if (res != "")
                     {
                         update_sync_log(res);
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_start : " + res);
                     }
                 }
             }
@@ -164,6 +181,7 @@ namespace DCRFIDReader
             if (res != "")
             {
                 update_sync_log(res);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_stop : " + res);
             }
             else
             {
@@ -188,6 +206,7 @@ namespace DCRFIDReader
                 if (res != "")
                 {
                     update_sync_log(res);
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_stop : " + res);
                 }
             }
         }
@@ -199,6 +218,7 @@ namespace DCRFIDReader
             if (res != "")
             {
                 update_sync_log(res);
+                cFileIO.WriteLogToFile("command_rescan : " + res);
             }
             else
             {
@@ -208,7 +228,8 @@ namespace DCRFIDReader
                 currentBookingNo = GetCurrentBooking();
 
                 // clear tag
-                await Task.Run(() => {
+                await Task.Run(() =>
+                {
                     clear_scan_ui();
                 });
 
@@ -223,6 +244,7 @@ namespace DCRFIDReader
                     if (res != "")
                     {
                         update_sync_log(res);
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_rescan : " + res);
                     }
                 }
             }
@@ -259,34 +281,46 @@ namespace DCRFIDReader
 
         private async Task scan_refresh_button()
         {
-            if (inProcessRefreshButton == false)
+            try
             {
-                inProcessRefreshButton = true;
-
-                DataTable dt = GetDtButtonView(dcGateNumber);
-                if (dt == null) return;
-
-                foreach (DataRow dr in dt.Rows)
+                if (inProcessRefreshButton == false)
                 {
-                    if ((bool)dr["isScanning"] == true)
+                    inProcessRefreshButton = true;
+
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "refresh button : start");
+
+                    DataTable dt = GetDtButtonView(dcGateNumber);
+                    if (dt == null) return;
+
+                    foreach (DataRow dr in dt.Rows)
                     {
-                        // load all data
-                        await load_data_po();
-
-                        currentBookingNo = GetCurrentBooking();
-
-                        // clear tag
-                        await Task.Run(() => {
-                            clear_scan_ui();
-                        });
-
-                        if (btnStartRead.Text == "Start Reading")
+                        if ((bool)dr["isScanning"] == true)
                         {
-                            btnStartRead_Click(this, EventArgs.Empty);
+                            // load all data
+                            await load_data_po();
+
+                            currentBookingNo = GetCurrentBooking();
+
+                            // clear tag
+                            await Task.Run(() =>
+                            {
+                                clear_scan_ui();
+                            });
+
+                            if (btnStartRead.Text == "Start Reading")
+                            {
+                                btnStartRead_Click(this, EventArgs.Empty);
+                            }
                         }
                     }
+                    inProcessRefreshButton = false;
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "refresh button : end");
                 }
+            }
+            catch (Exception ex)
+            {
                 inProcessRefreshButton = false;
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "scan_refresh_button - Error : " + ex.Message);
             }
         }
         #endregion
@@ -434,7 +468,7 @@ namespace DCRFIDReader
             return "";
         }
 
-        public async Task<string> save_epc_scan(string GateNumber,string BookingNo, string EPC,string PRProductItemId)
+        public async Task<string> save_epc_scan(string GateNumber, string BookingNo, string EPC, string PRProductItemId)
         {
             DBManager dbmgr = new DBManager();
             string sql = "";
@@ -472,7 +506,8 @@ namespace DCRFIDReader
                 {
                     return ds.Tables[0].Rows[0]["BookingNo"].ToString();
                 }
-                else {
+                else
+                {
                     return "";
                 }
             }
