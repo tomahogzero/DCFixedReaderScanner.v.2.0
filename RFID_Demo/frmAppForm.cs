@@ -279,11 +279,7 @@ namespace DCRFIDReader
 
                             logText = "TAG : " + tag.TagID + " Ant : " + tag.AntennaID.ToString();
 
-                            //if (aconfig.StartReaderForTest == "1")
-                            //{
-                            //cFileIO.WriteLogToFile(logText);
-                            //}
-
+                            cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", "Reading-" + tag.TagID);
 
                             re_update_sku2(this, tag.TagID, tag.AntennaID);
                         }
@@ -667,12 +663,13 @@ namespace DCRFIDReader
         {
             //txtGate.Text = aconfig.gate();
             //load_company();
+            QTags _QTags = new QTags(this);
             dtGateDevice = await DeviceGate.GetDataTable();
             dcGateNumber = await DeviceGate.GetGateNumber(dtGateDevice, deviceid);
-            dsTag = await QTags.get_product_epc("");
-            dsBox = await QTags.get_box("");
-            dsProduct = await QTags.get_product("");
-            dsPO = await QTags.get_po("");
+            dsTag = await _QTags.get_product_epc("");
+            dsBox = await _QTags.get_box("");
+            dsProduct = await _QTags.get_product("");
+            dsPO = await _QTags.get_po("");
             load_tags();
 
             btnStartAuto.Enabled = true;
@@ -709,17 +706,24 @@ namespace DCRFIDReader
 
         private void load_tags()
         {
-            gcTag.DataSource = dsTag;
-            gcTag.DataMember = dsTag.Tables[0].TableName;
+            try
+            {
+                gcTag.DataSource = dsTag;
+                gcTag.DataMember = dsTag.Tables[0].TableName;
 
-            gcBox.DataSource = dsBox;
-            gcBox.DataMember = dsBox.Tables[0].TableName;
+                gcBox.DataSource = dsBox;
+                gcBox.DataMember = dsBox.Tables[0].TableName;
 
-            gcUPC.DataSource = dsProduct;
-            gcUPC.DataMember = dsProduct.Tables[0].TableName;
+                gcUPC.DataSource = dsProduct;
+                gcUPC.DataMember = dsProduct.Tables[0].TableName;
 
-            gcPO.DataSource = dsPO;
-            gcPO.DataMember = dsPO.Tables[0].TableName;
+                gcPO.DataSource = dsPO;
+                gcPO.DataMember = dsPO.Tables[0].TableName;
+            }
+            catch (Exception ex)
+            {
+
+            }           
         }
 
         private void AppForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -1012,58 +1016,52 @@ namespace DCRFIDReader
             }
             else
             {
-                internal_cal = true;
-                string tag = tags;// item.SubItems[0].Text;
-                //DataSet ds = await QTags.get_epc_is_exist(tag, deviceid, antenna);
-
-                DataRow dr = await QTags.GetEPCDetail(dcGateNumber, dsTag.Tables[0], deviceid, antenna, tag);
-
-                if (dr != null)
+                try
                 {
-                    //DataRow dr = ds.Tables[0].Rows[0];
-                    string res = await save_epc_scan(dcGateNumber, currentBookingNo, tag, dr["PRProductItemId"].ToString());
-                    if (res != "")
+                    internal_cal = true;
+                    string tag = tags;// item.SubItems[0].Text;
+                                      //DataSet ds = await QTags.get_epc_is_exist(tag, deviceid, antenna);
+                    QTags _QTags = new QTags(this);
+
+                    DataRow dr = await _QTags.GetEPCDetail(dcGateNumber, dsTag.Tables[0], deviceid, antenna, tag);
+
+                    if (dr != null)
                     {
-                        //MessageBox.Show(res);
-                        cFileIO.WriteLogToFile("ScanningGateNo" + dcGateNumber, "Booking No. : " + currentBookingNo + " TAG : " + tag + " - Error : " + res);
+                        //DataRow dr = ds.Tables[0].Rows[0];
+                        string res = await save_epc_scan(dcGateNumber, currentBookingNo, tag, dr["PRProductItemId"].ToString());
+                        if (res != "")
+                        {
+                            //MessageBox.Show(res);
+                            cFileIO.WriteLogToFile("ScanningGateNo" + dcGateNumber, "Booking No. : " + currentBookingNo + " TAG : " + tag + " - Error : " + res);
+                        }
+
+                        QTagsUpdate_EPC _QTagsUpdate_EPC = new QTagsUpdate_EPC(this);
+                        QTagsUpdate _QTagsUpdate = new QTagsUpdate(this);
+
+                        _QTagsUpdate_EPC.updateRead(ref dsTag, tag);
+                        _QTagsUpdate.add_box(ref m_form, ref dsBox, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString());
+                        _QTagsUpdate.add_product(ref dsProduct, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString(), dr["ProductSku"].ToString());
+                        _QTagsUpdate.add_po(ref dsPO, dr["OrderNumber"].ToString());
+
+                        //cFileIO.WriteLogToFile("ScanningGateNo" + dcGateNumber, "Booking No. : " + currentBookingNo + " PONo.: " + dr["OrderNumber"] + " TAG : " + tag);
                     }
-                    QTagsUpdate_EPC.updateRead(ref dsTag, tag);
-                    QTagsUpdate.add_box(ref m_form, ref dsBox, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString());
-                    QTagsUpdate.add_product(ref dsProduct, dr["OrderNumber"].ToString(), dr["StoreNumber"].ToString(), dr["ContainerId"].ToString(), dr["ProductSku"].ToString());
-                    QTagsUpdate.add_po(ref dsPO, dr["OrderNumber"].ToString());
+                    //else {
+                    //    QTagsUpdate_EPC.add(ref dsTag, tag,"","", "", "", 0,"", "");
+                    //}
 
-                    //cFileIO.WriteLogToFile("ScanningGateNo" + dcGateNumber, "Booking No. : " + currentBookingNo + " PONo.: " + dr["OrderNumber"] + " TAG : " + tag);
+                    gcTag.Refresh();
+                    gcBox.Refresh();
+                    gcUPC.Refresh();
+                    gcPO.Refresh();
+
+                    lblTotalEPC.Text = inventoryList.Items.Count.ToString();
+
+                    internal_cal = false;
                 }
-                //else {
-                //    QTagsUpdate_EPC.add(ref dsTag, tag,"","", "", "", 0,"", "");
-                //}
-
-                gcTag.Refresh();
-                gcBox.Refresh();
-                gcUPC.Refresh();
-                gcPO.Refresh();
-
-                lblTotalEPC.Text = inventoryList.Items.Count.ToString();
-
-                // mark read
-                //item.SubItems[8].Text = "1";
-                //for (int c = 0; c <= inventoryList.Columns.Count - 1; c++)
-                //{
-                //    item.BackColor = Color.LightGreen;
-                //}
-
-
-                //item.BackColor = Color.LightGreen;
-
-
-                //lblNumberOfBox.Text = QTSumary.SumBox(ref dsBox);
-                //lblTotalUPC.Text = QTSumary.SumSKU(ref dsProduct);
-
-                //lblNumberOfBox.Refresh();
-                //lblTotalUPC.Refresh();
-                //totalTagValueLabel.Refresh();
-
-                internal_cal = false;
+                catch (Exception ex)
+                {
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "re_update_sku : " + ex.Message);
+                }
             }
         }
 
@@ -1092,77 +1090,72 @@ namespace DCRFIDReader
 
         private async void gvPO_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
         {
-            int QtyRead = Convert.ToInt32(gvPO.GetRowCellValue(e.RowHandle, "QtyRead"));
-            int DigitalQuantity = Convert.ToInt32(gvPO.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
+            // mark color
+            //int QtyRead = Convert.ToInt32(gvPO.GetRowCellValue(e.RowHandle, "QtyRead"));
+            //int DigitalQuantity = Convert.ToInt32(gvPO.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
 
 
-            if (DigitalQuantity != QtyRead)
-            {
-                e.Appearance.BackColor = Color.White;
-            }
-            else
-            {
-                e.Appearance.BackColor = Color.LightGreen;
-            }
-            //Override any other formatting  
-            e.HighPriority = true;
+            //if (DigitalQuantity != QtyRead)
+            //{
+            //    e.Appearance.BackColor = Color.White;
+            //}
+            //else
+            //{
+            //    e.Appearance.BackColor = Color.LightGreen;
+            //}
+            ////Override any other formatting  
+            //e.HighPriority = true;
         }
 
         private async void gvBox_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
         {
-            int QtyRead = Convert.ToInt32(gvBox.GetRowCellValue(e.RowHandle, "QtyRead"));
-            int DigitalQuantity = Convert.ToInt32(gvBox.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
+            // mark color
+            //int QtyRead = Convert.ToInt32(gvBox.GetRowCellValue(e.RowHandle, "QtyRead"));
+            //int DigitalQuantity = Convert.ToInt32(gvBox.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
 
-            if (e.RowHandle >= 0)
-            {
-                dsBox.Tables[0].Rows[e.RowHandle]["OrderNumber"].ToString();
-            }
+            //if (e.RowHandle >= 0)
+            //{
+            //    dsBox.Tables[0].Rows[e.RowHandle]["OrderNumber"].ToString();
+            //}
 
 
-            string cid = "";
+            //string cid = "";
 
-            if (gvBox.GetRowCellValue(e.RowHandle, "ContainerId") != null)
-            {
-                cid = gvBox.GetRowCellValue(e.RowHandle, "ContainerId").ToString();
-            }
+            //if (gvBox.GetRowCellValue(e.RowHandle, "ContainerId") != null)
+            //{
+            //    cid = gvBox.GetRowCellValue(e.RowHandle, "ContainerId").ToString();
+            //}
 
-            if (DigitalQuantity != QtyRead)
-            {
-                e.Appearance.BackColor = Color.White;
-            }
-            else
-            {
-                //if ((DigitalQuantity == QtyRead) && (QtyRead > 0) && (cid != ""))
-                //{
-                //    // save cid
-                //    save_cid(cid, get_tags(cid));
+            //if (DigitalQuantity != QtyRead)
+            //{
+            //    e.Appearance.BackColor = Color.White;
+            //}
+            //else
+            //{
+            //    e.Appearance.BackColor = Color.LightGreen;
+            //}
 
-                //    QTags.accept_box(OrderNumber, cid);
-                //    Application.DoEvents();
-                //}
-                e.Appearance.BackColor = Color.LightGreen;
-            }
-
-            //Override any other formatting  
-            e.HighPriority = true;
+            ////Override any other formatting  
+            //e.HighPriority = true;
         }
 
         private async void gvUPC_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e)
         {
-            int QtyRead = Convert.ToInt32(gvUPC.GetRowCellValue(e.RowHandle, "QtyRead"));
-            int DigitalQuantity = Convert.ToInt32(gvUPC.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
+            // mark color
+            //int QtyRead = Convert.ToInt32(gvUPC.GetRowCellValue(e.RowHandle, "QtyRead"));
+            //int DigitalQuantity = Convert.ToInt32(gvUPC.GetRowCellValue(e.RowHandle, "DigitalQuantity"));
 
-            if (DigitalQuantity != QtyRead)
-            {
-                e.Appearance.BackColor = Color.White;
-            }
-            else
-            {
-                e.Appearance.BackColor = Color.LightGreen;
-            }
+            //if (DigitalQuantity != QtyRead)
+            //{
+            //    e.Appearance.BackColor = Color.White;
+            //}
+            //else
+            //{
+            //    e.Appearance.BackColor = Color.LightGreen;
+            //}
 
-            //Override any other formatting  
-            e.HighPriority = true;
+            ////Override any other formatting  
+            //e.HighPriority = true;
         }
 
 
@@ -1211,14 +1204,6 @@ namespace DCRFIDReader
         {
             List<string> add_list = new List<string>();
 
-            //string err = "";
-            //DataSet ds = SyncData.GetDt_PRProductItem_Local(cboVendor.EditValue.ToString(), cboBookingNo.EditValue.ToString(), cid, ref err);
-            //if (err != "") { update_sync_log("Save EPC: " + err); }
-
-            //foreach (DataRow dr in ds.Tables[0].Rows)
-            //{
-            //    add_list.Add(dr["ItemUniqueId"].ToString());
-            //}
             return add_list.ToArray();
         }
 
@@ -1321,6 +1306,8 @@ namespace DCRFIDReader
 
                         cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnStartRead_Click - Start Reading");
 
+                        cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", "Start Reading");
+
                         //timer_clear_buffer.Enabled = true;
 
                         // timecount
@@ -1350,6 +1337,7 @@ namespace DCRFIDReader
                         reading = false;
 
                         cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnStartRead_Click - Stop Reading");
+                        cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", "Stop Reading");
 
                         //re_update_sku();
 
@@ -1362,27 +1350,32 @@ namespace DCRFIDReader
                 {
                     functionCallStatusLabel.Text = "Please connect to a reader";
                     cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click : Please connect to a reader");
+                    cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", "Connection Fail");
                 }
             }
             catch (InvalidOperationException ioe)
             {
                 functionCallStatusLabel.Text = ioe.Message;
                 cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click : " + ioe.Message);
+                cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", ioe.Message);
             }
             catch (InvalidUsageException iue)
             {
                 functionCallStatusLabel.Text = iue.Info;
                 cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click : " + iue.Info);
+                cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", iue.Message);
             }
             catch (OperationFailureException ofe)
             {
                 functionCallStatusLabel.Text = ofe.Result + ":" + ofe.StatusDescription;
                 cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click : " + ofe.StatusDescription);
+                cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", ofe.Message);
             }
             catch (Exception ex)
             {
                 functionCallStatusLabel.Text = ex.Message;
                 cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click : " + ex.Message);
+                cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", ex.Message);
             }
         }
 

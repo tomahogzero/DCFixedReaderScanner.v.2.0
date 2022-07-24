@@ -11,7 +11,14 @@ namespace DCRFIDReader
 {
     public class QTags
     {
-        public static DataSet get_company()
+        private frmAppForm m_AppForm;
+
+        public QTags(frmAppForm appForm)
+        {
+            m_AppForm = appForm;
+        }
+
+        public DataSet get_company()
         {
             SqlConnection conn = new SqlConnection();
             try
@@ -29,14 +36,15 @@ namespace DCRFIDReader
                 conn.Close();
                 return ds;
             }
-            catch
+            catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_company : " + ex.Message);
                 conn.Close();
                 return null;
             }
         }
 
-        public static string get_companyid(string username)
+        public string get_companyid(string username)
         {
             SqlConnection conn = new SqlConnection();
             try
@@ -68,14 +76,15 @@ namespace DCRFIDReader
                 }
 
             }
-            catch
+            catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_companyid : " + ex.Message);
                 conn.Close();
                 return "";
             }
         }
 
-        public static DataSet get_booking(string vendorid)
+        public DataSet get_booking(string vendorid)
         {
             SqlConnection conn = new SqlConnection();
             try
@@ -93,15 +102,16 @@ namespace DCRFIDReader
                 conn.Close();
                 return ds;
             }
-            catch
+            catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_booking : " + ex.Message);
                 conn.Close();
                 return null;
             }
         }
 
 
-        public async static Task<bool> save_epc_scan(string epc, string gatenumber)
+        public async Task<bool> save_epc_scan(string epc, string gatenumber)
         {
 
             DBManager dbMgr = new DBManager();
@@ -136,13 +146,14 @@ namespace DCRFIDReader
                     return false;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "save_epc_scan : " + ex.Message);
                 return false;
             }
         }
 
-        public async static Task<DataSet> get_box(string deviceid)
+        public async Task<DataSet> get_box(string deviceid)
         {
             DBManager dbMgr = new DBManager();
             try
@@ -160,13 +171,14 @@ namespace DCRFIDReader
                 ds = dbMgr.ExecuteCommand_Select_Ds(sql, strType, data);
                 return ds;
             }
-            catch
+            catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_box : " + ex.Message);
                 return null;
             }
         }
 
-        public async static Task<DataSet> get_product(string deviceid)
+        public async Task<DataSet> get_product(string deviceid)
         {
             DBManager dbMgr = new DBManager();
             try
@@ -183,13 +195,14 @@ namespace DCRFIDReader
                 ds = dbMgr.ExecuteCommand_Select_Ds(sql, strType, data);
                 return ds;
             }
-            catch
+            catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_product : " + ex.Message);
                 return null;
             }
         }
 
-        public async static Task<DataSet> get_product_epc(string deviceid)
+        public async Task<DataSet> get_product_epc(string deviceid)
         {
             DBManager dbMgr = new DBManager();
             try
@@ -209,11 +222,12 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_product_epc : " + ex.Message);
                 return null;
             }
         }
 
-        public async static Task<DataSet> get_po(string deviceid)
+        public async Task<DataSet> get_po(string deviceid)
         {
             DBManager dbMgr = new DBManager();
             try
@@ -232,30 +246,39 @@ namespace DCRFIDReader
                 ds = dbMgr.ExecuteCommand_Select_Ds(sql, strType, data);
                 return ds;
             }
-            catch
+            catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_po : " + ex.Message);
                 return null;
             }
         }
 
-        public async static Task<DataRow> GetEPCDetail(string GateNumber , DataTable dtTag, string deviceid, int antenna,string epc)
+        public async Task<DataRow> GetEPCDetail(string GateNumber, DataTable dtTag, string deviceid, int antenna, string epc)
         {
             //string GateNumber = DeviceGate.GetGateNumber(_dtDeviceGate, deviceid, antenna);
 
             if (GateNumber == "") return null;
 
-            DataRow[] dr = dtTag.Select("EPC = '" + epc + "' and QtyRead = 0");
-            if (dr.Length > 0)
+            try
             {
-                return dr[0];
+                DataRow[] dr = dtTag.Select("EPC = '" + epc + "' and QtyRead = 0");
+                if (dr.Length > 0)
+                {
+                    return dr[0];
+                }
+                else
+                {
+                    return null;
+                }
             }
-            else
+            catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "GetEPCDetail : " + ex.Message);
                 return null;
             }
         }
 
-        public static string accept_po(string gate,
+        public string accept_po(string gate,
                                 string res_person,
                                 string order_number,
                                 string time_st,
@@ -285,12 +308,13 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "accept_po : " + ex.Message);
                 conn.Close();
                 return ex.Message;
             }
         }
 
-        public static string accept_box(string order_number, string ContainerId)
+        public string accept_box(string order_number, string ContainerId)
         {
             SqlConnection conn = new SqlConnection();
             try
@@ -311,6 +335,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "accept_box : " + ex.Message);
                 conn.Close();
                 return ex.Message;
             }

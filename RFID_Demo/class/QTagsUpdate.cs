@@ -11,11 +11,19 @@ namespace DCRFIDReader
 {
     public class QTagsUpdate_EPC
     {
-        public static string add(ref DataSet ds, ref DataSet dsPOEPC, string epc, string sku, string upc, string description, string boxid, int status, string location, string vendorid)
+        private frmAppForm m_AppForm;
+
+        public QTagsUpdate_EPC(frmAppForm appForm)
+        {
+            m_AppForm = appForm;
+        }
+
+        public string add(ref DataSet ds, ref DataSet dsPOEPC, string epc, string sku, string upc, string description, string boxid, int status, string location, string vendorid)
         {
             try
             {
-                if (QTagsUpdate.check_product_epc(ref dsPOEPC, epc) == true)
+                QTagsUpdate _QTagsUpdate = new QTagsUpdate(m_AppForm);
+                if (_QTagsUpdate.check_product_epc(ref dsPOEPC, epc) == true)
                 {
                     DataRow dr = ds.Tables[0].NewRow();
                     dr["EPC"] = epc;
@@ -31,10 +39,11 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_EPC-add : " + ex.Message);
                 return ex.Message;
             }
         }
-        public static string update(ref DataSet ds, string epc, string sku, string upc, string description, string boxid, string status, string location, string vendorid)
+        public string update(ref DataSet ds, string epc, string sku, string upc, string description, string boxid, string status, string location, string vendorid)
         {
             try
             {
@@ -53,11 +62,12 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_EPC-update : " + ex.Message);
                 return ex.Message;
             }
         }
 
-        public static string updateRead(ref DataSet ds, string epc)
+        public string updateRead(ref DataSet ds, string epc)
         {
             try
             {
@@ -70,6 +80,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_EPC-updateRead : " + ex.Message);
                 return ex.Message;
             }
         }
@@ -78,7 +89,13 @@ namespace DCRFIDReader
 
     public class QTagsUpdate
     {
-        public static string add_box(ref System.Windows.Forms.Form m_form, ref DataSet ds, string OrderNumber, string StoreNumber, string ContainerId)
+        private frmAppForm m_AppForm;
+
+        public QTagsUpdate(frmAppForm appForm)
+        {
+            m_AppForm = appForm;
+        }
+        public string add_box(ref System.Windows.Forms.Form m_form, ref DataSet ds, string OrderNumber, string StoreNumber, string ContainerId)
         {
             try
             {
@@ -107,12 +124,13 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-add_box : " + ex.Message);
                 return ex.Message;
             }
         }
 
 
-        public static string add_product(ref DataSet ds, string OrderNumber, string StoreNumber, string ContainerId
+        public string add_product(ref DataSet ds, string OrderNumber, string StoreNumber, string ContainerId
                                             , string ProductSku)
         {
             try
@@ -130,11 +148,12 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-add_product : " + ex.Message);
                 return ex.Message;
             }
         }
 
-        public static bool check_product_epc(ref DataSet ds, string EPC)
+        public bool check_product_epc(ref DataSet ds, string EPC)
         {
             try
             {
@@ -149,13 +168,14 @@ namespace DCRFIDReader
                     return false;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-check_product_epc : " + ex.Message);
                 return false;
             }
         }
 
-        public static string add_po(ref DataSet ds, string OrderNumber)
+        public string add_po(ref DataSet ds, string OrderNumber)
         {
             try
             {
@@ -180,11 +200,12 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-add_po : " + ex.Message);
                 return ex.Message;
             }
         }
 
-        public static string update_time_dc_po_receive(string ordernumber)
+        public string update_time_dc_po_receive(string ordernumber)
         {
             DBManager dbmgr = new DBManager();
             string sql = "";
@@ -200,6 +221,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-update_time_dc_po_receive : " + ex.Message);
                 return ex.Message;
             }
             return "";
@@ -209,7 +231,14 @@ namespace DCRFIDReader
 
     public class QTSumary
     {
-        public static string SumBox(ref DataSet ds)
+        private frmAppForm m_AppForm;
+
+        public QTSumary(frmAppForm appForm)
+        {
+            m_AppForm = appForm;
+        }
+
+        public string SumBox(ref DataSet ds)
         {
             try
             {
@@ -223,12 +252,13 @@ namespace DCRFIDReader
                     return drs.Length.ToString() + "/" + ds.Tables[0].Rows.Count.ToString();
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTSumary_-SumBox : " + ex.Message);
                 return "0/0";
             }
         }
-        public static string SumSKU(ref DataSet ds)
+        public string SumSKU(ref DataSet ds)
         {
             try
             {
@@ -242,8 +272,9 @@ namespace DCRFIDReader
                 }
                 return read.ToString() + "/" + qty.ToString();
             }
-            catch
+            catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTSumary_-SumSKU : " + ex.Message);
                 return "0/0";
             }
         }

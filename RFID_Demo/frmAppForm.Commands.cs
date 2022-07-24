@@ -85,10 +85,11 @@ namespace DCRFIDReader
         #region "function"
         private async Task load_data_po()
         {
-            dsTag = await QTags.get_product_epc(deviceid);
-            dsBox = await QTags.get_box(deviceid);
-            dsProduct = await QTags.get_product(deviceid);
-            dsPO = await QTags.get_po(deviceid);
+            QTags _QTags = new QTags(this);
+            dsTag = await _QTags.get_product_epc(deviceid);
+            dsBox = await _QTags.get_box(deviceid);
+            dsProduct = await _QTags.get_product(deviceid);
+            dsPO = await _QTags.get_po(deviceid);
             load_tags();
         }
         #endregion
@@ -511,13 +512,14 @@ namespace DCRFIDReader
                     return "";
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "GetCurrentBooking : " + ex.Message);
                 return "";
             }
         }
 
-        public static DataTable GetDtScanCommand()
+        public DataTable GetDtScanCommand()
         {
             DBManager dbMgr = new DBManager();
             string sql = "";
@@ -529,13 +531,14 @@ namespace DCRFIDReader
 
                 return ds.Tables[0];
             }
-            catch
+            catch(Exception ex)
             {
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "GetDtScanCommand : " + ex.Message);
                 return null;
             }
         }
 
-        public static DataTable GetDtButtonView(string GateNumber)
+        public DataTable GetDtButtonView(string GateNumber)
         {
             DBManager dbMgr = new DBManager();
             string sql = "";
@@ -547,8 +550,9 @@ namespace DCRFIDReader
 
                 return ds.Tables[0];
             }
-            catch
+            catch (Exception ex)
             {
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "GetDtButtonView : " + ex.Message);
                 return null;
             }
         }
