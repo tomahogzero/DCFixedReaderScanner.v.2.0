@@ -10,11 +10,13 @@ using System.Windows.Forms;
 using Symbol.RFID3;
 using System.Threading.Tasks;
 using DevExpress.XtraEditors.Repository;
+using DCRFIDReader.Models;
 
 namespace DCRFIDReader
 {
     public partial class frmAppForm : Form
     {
+        public List<ReadTagsModel> Tags = new List<ReadTagsModel>();
         internal RFIDReader m_ReaderAPI;
         internal bool m_IsConnected;
         internal ConnectionForm m_ConnectionForm;
@@ -62,6 +64,10 @@ namespace DCRFIDReader
 
         public string Title = "RFID DC Receive Reader ";
 
+        BackgroundWorker workerProcessRFID = new BackgroundWorker();
+        public bool inProcessTags = false;
+        public bool isCancelProcessTags = false;
+
         internal class AccessOperationResult
         {
             public RFIDResults m_Result;
@@ -79,6 +85,12 @@ namespace DCRFIDReader
         public frmAppForm()
         {
             InitializeComponent();
+
+            Tags = new List<ReadTagsModel>();
+
+            workerProcessRFID.WorkerSupportsCancellation = true;
+            workerProcessRFID.DoWork += workerProcessRFID_DoWork;
+
             m_ReadTag = new Symbol.RFID3.TagData();
             m_UpdateStatusHandler = new UpdateStatus(myUpdateStatus);
             m_UpdateReadHandler = new UpdateRead(myUpdateRead);
@@ -236,6 +248,8 @@ namespace DCRFIDReader
                                     m_TagTable.Add(tag.TagID + tag.MemoryBank.ToString()
                                         + tag.MemoryBankDataOffset.ToString(), item);
                                 }
+
+                                ReadTags.AddTag(this, tag.TagID, tag.AntennaID);
                             }
                         }
                         else
@@ -281,12 +295,61 @@ namespace DCRFIDReader
 
                             //cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", "Reading-" + tag.TagID);
 
-                            re_update_sku2(this, tag.TagID, tag.AntennaID);
+                            //re_update_sku2(this, tag.TagID, tag.AntennaID);
+                            ReadTags.AddTag(this, tag.TagID, tag.AntennaID);
                         }
                     }
                 }
                 //totalTagValueLabel.Text = m_TagTable.Count + "(" + m_TagTotalCount + ")";
             }
+        }
+
+        private async void workerProcessRFID_DoWork(object sender, DoWorkEventArgs e)
+        {
+            do
+            {
+                try
+                {
+
+                    inProcessTags = true;
+
+
+                    // start
+                    ReadTags.StartProcess(this);
+
+                    var toProcess = ReadTags.GetProcess(this);
+                    
+                    if(toProcess != null)
+                    {
+                        foreach (ReadTagsModel md in toProcess)
+                        {
+                            re_update_sku2(this, md.RFID, md.Antenna);
+                        }
+                    }
+
+                    // end process
+                    ReadTags.DeleteCompleted(this);
+
+                    if (isCancelProcessTags == true)
+                    {
+                        isCancelProcessTags = false;
+                        e.Cancel = true;
+                        inProcessTags = false;
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+                Thread.Sleep(1000);
+            } while (isCancelProcessTags == false);
+
+            isCancelProcessTags = false;
+
+            inProcessTags = false;
+
         }
 
         private void Events_ReadNotify(object sender, Events.ReadEventArgs readEventArgs)
@@ -723,7 +786,7 @@ namespace DCRFIDReader
             catch (Exception ex)
             {
 
-            }           
+            }
         }
 
         private void AppForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -1427,6 +1490,12 @@ namespace DCRFIDReader
             timer_refresh_button.Interval = (1000 * 60) * 2;
             timer_refresh_button.Enabled = true;
 
+
+            if (!workerProcessRFID.IsBusy)
+            {
+                workerProcessRFID.RunWorkerAsync();
+            }
+
             cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnStartAuto_Click - Start Auto Scan");
         }
 
@@ -1437,6 +1506,20 @@ namespace DCRFIDReader
 
             timer_getCommand.Enabled = false;
             timer_refresh_button.Enabled = false;
+
+            isCancelProcessTags = true;
+
+            do
+            {
+                if (workerProcessRFID.IsBusy)
+                {
+                    workerProcessRFID.CancelAsync();
+                }
+
+                Thread.Sleep(1000);
+            } while (inProcessTags == true);
+
+            isCancelProcessTags = false;
 
             cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnStopAuto_Click - Stop Auto Scan");
         }
@@ -1533,7 +1616,7 @@ namespace DCRFIDReader
                     inventoryList.Items.Clear();
                     m_TagTable.Clear();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "clear buffer | " + ex.Message);
                 }
