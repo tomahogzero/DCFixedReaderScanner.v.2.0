@@ -39,7 +39,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_EPC-add : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_EPC-add | " + ex.Message);
                 return ex.Message;
             }
         }
@@ -62,7 +62,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_EPC-update : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_EPC-update | " + ex.Message);
                 return ex.Message;
             }
         }
@@ -80,7 +80,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_EPC-updateRead : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_EPC-updateRead | " + ex.Message);
                 return ex.Message;
             }
         }
@@ -124,7 +124,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-add_box : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-add_box | " + ex.Message);
                 return ex.Message;
             }
         }
@@ -148,7 +148,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-add_product : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-add_product | " + ex.Message);
                 return ex.Message;
             }
         }
@@ -170,7 +170,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-check_product_epc : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-check_product_epc | " + ex.Message);
                 return false;
             }
         }
@@ -200,7 +200,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-add_po : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-add_po | " + ex.Message);
                 return ex.Message;
             }
         }
@@ -221,7 +221,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-update_time_dc_po_receive : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTagsUpdate_-update_time_dc_po_receive | " + ex.Message);
                 return ex.Message;
             }
             return "";
@@ -254,7 +254,7 @@ namespace DCRFIDReader
             }
             catch(Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTSumary_-SumBox : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTSumary_-SumBox | " + ex.Message);
                 return "0/0";
             }
         }
@@ -274,7 +274,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTSumary_-SumSKU : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "QTSumary_-SumSKU | " + ex.Message);
                 return "0/0";
             }
         }

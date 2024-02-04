@@ -118,19 +118,19 @@ namespace DCRFIDReader
             {
                 case Symbol.RFID3.Events.STATUS_EVENT_TYPE.INVENTORY_START_EVENT:
                     functionCallStatusLabel.Text = "Inventory started";
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus : Inventory started");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus | Inventory started");
                     break;
                 case Symbol.RFID3.Events.STATUS_EVENT_TYPE.INVENTORY_STOP_EVENT:
                     functionCallStatusLabel.Text = "Inventory stopped";
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus : Inventory stopped");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus | Inventory stopped");
                     break;
                 case Symbol.RFID3.Events.STATUS_EVENT_TYPE.ACCESS_START_EVENT:
                     functionCallStatusLabel.Text = "Access Operation started";
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus : Access Operation started");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus | Access Operation started");
                     break;
                 case Symbol.RFID3.Events.STATUS_EVENT_TYPE.ACCESS_STOP_EVENT:
                     functionCallStatusLabel.Text = "Access Operation stopped";
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus : Access Operation stopped");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus | Access Operation stopped");
                     if (this.m_SelectedTagID == string.Empty)
                     {
                         uint successCount, failureCount;
@@ -138,33 +138,33 @@ namespace DCRFIDReader
                         m_ReaderAPI.Actions.TagAccess.GetLastAccessResult(ref successCount, ref failureCount);
                         functionCallStatusLabel.Text = "Access completed - Success Count: " + successCount.ToString()
                             + ", Failure Count: " + failureCount.ToString();
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus : Access completed - Success Count: " + successCount.ToString()
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus | Access completed - Success Count: " + successCount.ToString()
                             + ", Failure Count: " + failureCount.ToString());
                     }
                     resetButtonState();
                     break;
                 case Symbol.RFID3.Events.STATUS_EVENT_TYPE.BUFFER_FULL_WARNING_EVENT:
                     functionCallStatusLabel.Text = " Buffer full warning";
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus : Buffer full warning");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus | Buffer full warning");
                     myUpdateRead(null);
                     break;
                 case Symbol.RFID3.Events.STATUS_EVENT_TYPE.BUFFER_FULL_EVENT:
                     functionCallStatusLabel.Text = "Buffer full";
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus : Buffer full");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus | Buffer full");
                     myUpdateRead(null);
                     break;
                 case Symbol.RFID3.Events.STATUS_EVENT_TYPE.DISCONNECTION_EVENT:
                     functionCallStatusLabel.Text = "Disconnection Event " + eventData.DisconnectionEventData.DisconnectEventInfo.ToString();
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus : Disconnection Event " + eventData.DisconnectionEventData.DisconnectEventInfo.ToString());
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus | Disconnection Event " + eventData.DisconnectionEventData.DisconnectEventInfo.ToString());
                     connectBackgroundWorker.RunWorkerAsync("Disconnect");
                     break;
                 case Symbol.RFID3.Events.STATUS_EVENT_TYPE.ANTENNA_EVENT:
                     functionCallStatusLabel.Text = "Antenna Status Update";
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus : Antenna Status Update");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus | Antenna Status Update");
                     break;
                 case Symbol.RFID3.Events.STATUS_EVENT_TYPE.READER_EXCEPTION_EVENT:
                     functionCallStatusLabel.Text = "Reader ExceptionEvent " + eventData.ReaderExceptionEventData.ReaderExceptionEventInfo;
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus : Reader ExceptionEvent " + eventData.ReaderExceptionEventData.ReaderExceptionEventInfo);
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateStatus | Reader ExceptionEvent " + eventData.ReaderExceptionEventData.ReaderExceptionEventInfo);
                     break;
                 default:
                     break;
@@ -211,7 +211,7 @@ namespace DCRFIDReader
                             catch (FormatException fe)
                             {
                                 functionCallStatusLabel.Text = fe.Message;
-                                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateRead : " + fe.Message);
+                                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "myUpdateRead | " + fe.Message);
                                 break;
                             }
                             item.SubItems[1].Text = tag.AntennaID.ToString();
@@ -279,7 +279,7 @@ namespace DCRFIDReader
 
                             logText = "TAG : " + tag.TagID + " Ant : " + tag.AntennaID.ToString();
 
-                            cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", "Reading-" + tag.TagID);
+                            //cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", "Reading-" + tag.TagID);
 
                             re_update_sku2(this, tag.TagID, tag.AntennaID);
                         }
@@ -329,7 +329,7 @@ namespace DCRFIDReader
                     else
                     {
                         functionCallStatusLabel.Text = "Enter Tag-Id";
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_DoWork - ACCESS_OPERATION_READ : Enter Tag-Id");
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_DoWork - ACCESS_OPERATION_READ | Enter Tag-Id");
                     }
                 }
                 else if ((ACCESS_OPERATION_CODE)accessEvent.Argument == ACCESS_OPERATION_CODE.ACCESS_OPERATION_WRITE)
@@ -342,7 +342,7 @@ namespace DCRFIDReader
                     else
                     {
                         functionCallStatusLabel.Text = "Enter Tag-Id";
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_DoWork - ACCESS_OPERATION_WRITE : Enter Tag-Id");
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_DoWork - ACCESS_OPERATION_WRITE | Enter Tag-Id");
                     }
                 }
                 else if ((ACCESS_OPERATION_CODE)accessEvent.Argument == ACCESS_OPERATION_CODE.ACCESS_OPERATION_LOCK)
@@ -355,7 +355,7 @@ namespace DCRFIDReader
                     else
                     {
                         functionCallStatusLabel.Text = "Enter Tag-Id";
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_DoWork - ACCESS_OPERATION_LOCK : Enter Tag-Id");
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_DoWork - ACCESS_OPERATION_LOCK | Enter Tag-Id");
                     }
                 }
                 else if ((ACCESS_OPERATION_CODE)accessEvent.Argument == ACCESS_OPERATION_CODE.ACCESS_OPERATION_KILL)
@@ -376,7 +376,7 @@ namespace DCRFIDReader
                     else
                     {
                         functionCallStatusLabel.Text = "Enter Tag-Id";
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_DoWork - ACCESS_OPERATION_BLOCK_ERASE : Enter Tag-Id");
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_DoWork - ACCESS_OPERATION_BLOCK_ERASE | Enter Tag-Id");
                     }
                 }
             }
@@ -408,7 +408,7 @@ namespace DCRFIDReader
             if (accessEvents.Error != null)
             {
                 functionCallStatusLabel.Text = accessEvents.Error.Message;
-                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted : " + accessEvents.Error.Message);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted | " + accessEvents.Error.Message);
             }
             else
             {
@@ -495,34 +495,34 @@ namespace DCRFIDReader
                             }
                             this.m_ReadForm.ReadData_TB.Text = m_ReadTag.MemoryBankData;
                             functionCallStatusLabel.Text = "Read Succeed";
-                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted - ACCESS_OPERATION_READ : Read Succeed");
+                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted - ACCESS_OPERATION_READ | Read Succeed");
                         }
                     }
                     else if (accessOpResult.m_OpCode == ACCESS_OPERATION_CODE.ACCESS_OPERATION_WRITE)
                     {
                         functionCallStatusLabel.Text = "Write Succeed";
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted - ACCESS_OPERATION_WRITE : Write Succeed");
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted - ACCESS_OPERATION_WRITE | Write Succeed");
                     }
                     else if (accessOpResult.m_OpCode == ACCESS_OPERATION_CODE.ACCESS_OPERATION_LOCK)
                     {
                         functionCallStatusLabel.Text = "Lock Succeed";
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted - ACCESS_OPERATION_LOCK : Lock Succeed");
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted - ACCESS_OPERATION_LOCK | Lock Succeed");
                     }
                     else if (accessOpResult.m_OpCode == ACCESS_OPERATION_CODE.ACCESS_OPERATION_KILL)
                     {
                         functionCallStatusLabel.Text = "Kill Succeed";
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted - ACCESS_OPERATION_KILL : Kill Succeed");
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted - ACCESS_OPERATION_KILL | Kill Succeed");
                     }
                     else if (accessOpResult.m_OpCode == ACCESS_OPERATION_CODE.ACCESS_OPERATION_BLOCK_ERASE)
                     {
                         functionCallStatusLabel.Text = "BlockErase Succeed";
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted - ACCESS_OPERATION_BLOCK_ERASE : BlockErase Succeed");
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted - ACCESS_OPERATION_BLOCK_ERASE | BlockErase Succeed");
                     }
                 }
                 else
                 {
                     functionCallStatusLabel.Text = accessOpResult.m_StatusDescription + " [" + accessOpResult.m_VendorMessage + "]";
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted - ELSE : " + accessOpResult.m_StatusDescription + " [" + accessOpResult.m_VendorMessage + "]");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted - ELSE | " + accessOpResult.m_StatusDescription + " [" + accessOpResult.m_VendorMessage + "]");
                 }
                 resetButtonState();
             }
@@ -609,7 +609,7 @@ namespace DCRFIDReader
                     this.btnStartRead.Enabled = true;
                     this.btnStartRead.Text = "Start Reading";
 
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted : Connect Succeed");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted | Connect Succeed");
 
                     /*
                      *  Events Registration
@@ -629,7 +629,7 @@ namespace DCRFIDReader
 
                     this.Text = Title + "Connected to " + deviceip + " [" + dcGateNumber + "]";
 
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted : Connected to " + deviceip + "[" + dcGateNumber + "]");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted | Connected to " + deviceip + "[" + dcGateNumber + "]");
 
                     this.connectionStatus.BackgroundImage =
                         global::DCRFIDReader.Properties.Resources.connected;
@@ -649,11 +649,11 @@ namespace DCRFIDReader
                     this.btnStartRead.Enabled = false;
                     this.btnStartRead.Text = "Start Reading";
 
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted : Disconnect Succeed");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted | Disconnect Succeed");
                 }
             }
             functionCallStatusLabel.Text = connectEventArgs.Result.ToString();
-            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted : " + connectEventArgs.Result.ToString());
+            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "accessBackgroundWorker_RunWorkerCompleted | " + connectEventArgs.Result.ToString());
 
             m_ConnectionForm.connectionButton.Enabled = true;
             ReaderConnectInProcess = false;
@@ -739,7 +739,7 @@ namespace DCRFIDReader
             catch (Exception ex)
             {
                 functionCallStatusLabel.Text = ex.Message;
-                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "AppForm_FormClosing : " + ex.Message);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "AppForm_FormClosing | " + ex.Message);
             }
         }
 
@@ -1032,7 +1032,7 @@ namespace DCRFIDReader
                         if (res != "")
                         {
                             //MessageBox.Show(res);
-                            cFileIO.WriteLogToFile("ScanningGateNo" + dcGateNumber, "Booking No. : " + currentBookingNo + " TAG : " + tag + " - Error : " + res);
+                            cFileIO.WriteLogToFile("ScanningGateNo" + dcGateNumber, "re_update_sku2 | Booking No. : " + currentBookingNo + " TAG : " + tag + " - Error | " + res);
                         }
 
                         QTagsUpdate_EPC _QTagsUpdate_EPC = new QTagsUpdate_EPC(this);
@@ -1060,7 +1060,7 @@ namespace DCRFIDReader
                 }
                 catch (Exception ex)
                 {
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "re_update_sku : " + ex.Message);
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "re_update_sku | " + ex.Message);
                 }
             }
         }
@@ -1349,32 +1349,32 @@ namespace DCRFIDReader
                 else
                 {
                     functionCallStatusLabel.Text = "Please connect to a reader";
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click : Please connect to a reader");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click | Please connect to a reader");
                     cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", "Connection Fail");
                 }
             }
             catch (InvalidOperationException ioe)
             {
                 functionCallStatusLabel.Text = ioe.Message;
-                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click : " + ioe.Message);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click | " + ioe.Message);
                 cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", ioe.Message);
             }
             catch (InvalidUsageException iue)
             {
                 functionCallStatusLabel.Text = iue.Info;
-                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click : " + iue.Info);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click | " + iue.Info);
                 cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", iue.Message);
             }
             catch (OperationFailureException ofe)
             {
                 functionCallStatusLabel.Text = ofe.Result + ":" + ofe.StatusDescription;
-                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click : " + ofe.StatusDescription);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click | " + ofe.StatusDescription);
                 cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", ofe.Message);
             }
             catch (Exception ex)
             {
                 functionCallStatusLabel.Text = ex.Message;
-                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click : " + ex.Message);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "btnRead_Click | " + ex.Message);
                 cFileIO.WriteLogToFileCurrentStatus(deviceip.Replace(".", "") + "-ReaderStatus", ex.Message);
             }
         }
@@ -1483,7 +1483,7 @@ namespace DCRFIDReader
                     {
                         this.functionCallStatusLabel.Text = ex.Message;
                         //MessageBox.Show(ex.Message);
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "Reconnect : " + ex.Message);
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "timer_reconnect_Tick | " + ex.Message);
                     }
                 }
             }
@@ -1523,11 +1523,11 @@ namespace DCRFIDReader
                 {
                     if (btnStartRead.Text == "Stop Reading")
                     {
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "clear buffer : stop");
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "clear buffer | stop");
                         btnStartRead_Click(btnStartRead, null);
                         Thread.Sleep(1000);
                         btnStartRead_Click(btnStartRead, null);
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "clear buffer : start");
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "clear buffer | start");
                     }
 
                     inventoryList.Items.Clear();
@@ -1535,7 +1535,7 @@ namespace DCRFIDReader
                 }
                 catch(Exception ex)
                 {
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "clear buffer : " + ex.Message);
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "clear buffer | " + ex.Message);
                 }
             });
         }

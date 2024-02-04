@@ -44,7 +44,7 @@ namespace DCRFIDReader
             catch (Exception ex)
             {
                 m_AppForm.functionCallStatusLabel.Text = ex.Message;
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", ""), "connectionButton_Click : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", ""), "connectionButton_Click | " + ex.Message);
             }
         }
 

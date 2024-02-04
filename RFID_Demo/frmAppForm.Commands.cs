@@ -55,7 +55,7 @@ namespace DCRFIDReader
             else
             {
                 //lstSyncLog.Items.Insert(0, DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") + " " + value);
-                cFileIO.WriteLogToFile(deviceip.Replace(".", ""),"update_sync_log : " + value);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""),"update_sync_log | " + value);
             }
         }
 
@@ -76,7 +76,7 @@ namespace DCRFIDReader
                 }
                 catch (Exception ex)
                 {
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "clear_scan_ui : " + ex.Message);
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "clear_scan_ui | " + ex.Message);
                 }
             }
         }
@@ -111,21 +111,21 @@ namespace DCRFIDReader
                     switch ((int)dr["CommandCode"])
                     {
                         case 101: // SCAN
-                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_start : start");
+                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_start | start");
                             await command_start();
-                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_start : end");
+                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_start | end");
                             break;
 
                         case 102: // Re Scan
-                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_rescan : start");
+                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_rescan | start");
                             await command_rescan();
-                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_rescan : end");
+                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_rescan | end");
                             break;
 
                         case 103: // Stop
-                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_stop : start");
+                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_stop | start");
                             await command_stop();
-                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_stop : stop");
+                            cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_stop | stop");
                             break;
                         default:
                             break;
@@ -142,7 +142,7 @@ namespace DCRFIDReader
             if (res != "")
             {
                 update_sync_log(res);
-                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_start : " + res);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_start | " + res);
             }
             else
             {
@@ -169,7 +169,7 @@ namespace DCRFIDReader
                     if (res != "")
                     {
                         update_sync_log(res);
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_start : " + res);
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_start | " + res);
                     }
                 }
             }
@@ -182,7 +182,7 @@ namespace DCRFIDReader
             if (res != "")
             {
                 update_sync_log(res);
-                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_stop : " + res);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_stop | " + res);
             }
             else
             {
@@ -207,7 +207,7 @@ namespace DCRFIDReader
                 if (res != "")
                 {
                     update_sync_log(res);
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_stop : " + res);
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_stop | " + res);
                 }
             }
         }
@@ -219,7 +219,7 @@ namespace DCRFIDReader
             if (res != "")
             {
                 update_sync_log(res);
-                cFileIO.WriteLogToFile("command_rescan : " + res);
+                cFileIO.WriteLogToFile("command_rescan | " + res);
             }
             else
             {
@@ -245,7 +245,7 @@ namespace DCRFIDReader
                     if (res != "")
                     {
                         update_sync_log(res);
-                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_rescan : " + res);
+                        cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "command_rescan | " + res);
                     }
                 }
             }
@@ -288,7 +288,7 @@ namespace DCRFIDReader
                 {
                     inProcessRefreshButton = true;
 
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "refresh button : start");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "refresh button | start");
 
                     DataTable dt = GetDtButtonView(dcGateNumber);
                     if (dt == null) return;
@@ -315,13 +315,13 @@ namespace DCRFIDReader
                         }
                     }
                     inProcessRefreshButton = false;
-                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "refresh button : end");
+                    cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "refresh button | end");
                 }
             }
             catch (Exception ex)
             {
                 inProcessRefreshButton = false;
-                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "scan_refresh_button - Error : " + ex.Message);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "scan_refresh_button - Error | " + ex.Message);
             }
         }
         #endregion
@@ -514,7 +514,7 @@ namespace DCRFIDReader
             }
             catch(Exception ex)
             {
-                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "GetCurrentBooking : " + ex.Message);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "GetCurrentBooking | " + ex.Message);
                 return "";
             }
         }
@@ -533,7 +533,7 @@ namespace DCRFIDReader
             }
             catch(Exception ex)
             {
-                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "GetDtScanCommand : " + ex.Message);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "GetDtScanCommand | " + ex.Message);
                 return null;
             }
         }
@@ -552,7 +552,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "GetDtButtonView : " + ex.Message);
+                cFileIO.WriteLogToFile(deviceip.Replace(".", ""), "GetDtButtonView | " + ex.Message);
                 return null;
             }
         }

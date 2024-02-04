@@ -38,7 +38,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_company : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_company | " + ex.Message);
                 conn.Close();
                 return null;
             }
@@ -78,7 +78,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_companyid : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_companyid | " + ex.Message);
                 conn.Close();
                 return "";
             }
@@ -104,7 +104,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_booking : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_booking | " + ex.Message);
                 conn.Close();
                 return null;
             }
@@ -148,7 +148,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "save_epc_scan : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "save_epc_scan | " + ex.Message);
                 return false;
             }
         }
@@ -173,7 +173,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_box : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_box | " + ex.Message);
                 return null;
             }
         }
@@ -197,7 +197,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_product : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_product | " + ex.Message);
                 return null;
             }
         }
@@ -222,7 +222,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_product_epc : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_product_epc | " + ex.Message);
                 return null;
             }
         }
@@ -248,7 +248,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_po : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "get_po | " + ex.Message);
                 return null;
             }
         }
@@ -273,7 +273,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "GetEPCDetail : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "GetEPCDetail | " + ex.Message);
                 return null;
             }
         }
@@ -308,7 +308,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "accept_po : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "accept_po | " + ex.Message);
                 conn.Close();
                 return ex.Message;
             }
@@ -335,7 +335,7 @@ namespace DCRFIDReader
             }
             catch (Exception ex)
             {
-                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "accept_box : " + ex.Message);
+                cFileIO.WriteLogToFile(m_AppForm.deviceip.Replace(".", "") + "-DB", "accept_box | " + ex.Message);
                 conn.Close();
                 return ex.Message;
             }
